@@ -195,7 +195,7 @@ public class Follower {
      * @param set This caps the motor power from [0, 1].
      */
     public void setMaxPower(double set) {
-        maxPower = MathFunctions.clamp(set, 0, 1);
+        maxPower = MathFunctions.clamp(set, 0, set);
     }
 
     /**
