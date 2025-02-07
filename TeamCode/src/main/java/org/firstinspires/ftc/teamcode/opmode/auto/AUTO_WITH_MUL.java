@@ -29,8 +29,8 @@ import org.firstinspires.ftc.teamcode.pedroPathing.util.Timer;
  * @version 2.0, 11/28/2024
  */
 
-@Autonomous(name = "test01", group = "Examples")
-public class test01 extends OpMode {
+@Autonomous(name = "mutiple")
+public class AUTO_WITH_MUL extends OpMode {
 
     private Follower follower;
     private Timer pathTimer, actionTimer, opmodeTimer;
@@ -63,32 +63,27 @@ public class test01 extends OpMode {
 
     /** Start Pose of our robot */
     private final Pose startPose = new Pose(0, 0, Math.toRadians(0));
-
-
     private final Pose hang_Sp1 = new Pose(19, 0, Math.toRadians(0));
-
-
     private final Pose Slide = new Pose(14, -18, Math.toRadians(0));
-
-
-    private final Pose pl_Sp1 = new Pose(33, -21, Math.toRadians(0));
-    private final Pose pl_Sp1_Slide = new Pose(33, -25, Math.toRadians(0));
+    private final Pose pl_Sp1 = new Pose(31.5, -21, Math.toRadians(0));
+    private final Pose pl_Sp1_Slide = new Pose(31.5, -25, Math.toRadians(0));
     private final Pose pl_Sp1_Back = new Pose(10, -25, Math.toRadians(0));
-    private final Pose pl_Sp2_FW = new Pose(33, -28, Math.toRadians(0));
-    private final Pose pl_Sp2_Slide = new Pose(33, -32, Math.toRadians(0));
+    private final Pose pl_Sp2_FW = new Pose(31.5, -28, Math.toRadians(0));
+    private final Pose pl_Sp2_Slide = new Pose(31.5, -32, Math.toRadians(0));
     private final Pose pl_Sp2_Back = new Pose(10, -32, Math.toRadians(0));
-    private final Pose pl_Sp3_FW = new Pose(33, -36, Math.toRadians(0));
-    private final Pose pl_Sp3_Slide = new Pose(33, -36, Math.toRadians(0));
+    private final Pose pl_Sp3_FW = new Pose(31.5, -36, Math.toRadians(0));
+    private final Pose pl_Sp3_Slide = new Pose(31.5, -36, Math.toRadians(0));
     private final Pose pl_Sp3_Back = new Pose(10, -36, Math.toRadians(0));
     private final Pose human = new Pose(3, -36, Math.toRadians(0));
     private final Pose hang_Sp2 = new Pose(18, -1, Math.toRadians(0));
     private final Pose hang_Sp3 = new Pose(18, -0.8, Math.toRadians(0));
     private final Pose hang_Sp4 = new Pose(18, -0.6, Math.toRadians(0));
+    private final Pose hang_Sp5 = new Pose(18, -0.4, Math.toRadians(0));
     private final Pose keep_Sp = new Pose(4.5, -15, Math.toRadians(0));
 
 
     private Path scorePreload, park;
-    private PathChain grabPickup1, grabPickup2, grabPickup3, grabfood,  grabPickup5, grabPickup6,grabPickup7,grabPickup8,grabPickup9,grabPickup10,hangSp2,keepSp,hangSp3,hangSp4,keepSp1;
+    private PathChain grabPickup1, grabPickup2, grabPickup3, grabfood,  grabPickup5, grabPickup6,grabPickup7,grabPickup8,grabPickup9,grabPickup10,hangSp2,keepSp,hangSp3,hangSp4,hangSp5,keepSp1,keepSp2;
 
     /** Build the paths for the auto (adds, for example, constant/linear headings while doing paths)
      * It is necessary to do this so that all the paths are built before the auto starts. **/
@@ -183,7 +178,14 @@ public class test01 extends OpMode {
                 .addPath(new BezierLine(new Point(keep_Sp), new Point(hang_Sp4)))
                 .setLinearHeadingInterpolation(keep_Sp.getHeading(), hang_Sp4.getHeading())
                 .build();
-
+        keepSp2 = follower.pathBuilder()
+                .addPath(new BezierLine(new Point(hang_Sp4), new Point(keep_Sp)))
+                .setLinearHeadingInterpolation(hang_Sp3.getHeading(), keep_Sp.getHeading())
+                .build();
+        hangSp5 = follower.pathBuilder()
+                .addPath(new BezierLine(new Point(keep_Sp), new Point(hang_Sp5)))
+                .setLinearHeadingInterpolation(keep_Sp.getHeading(), hang_Sp4.getHeading())
+                .build();
 
     }
 
@@ -196,7 +198,7 @@ public class test01 extends OpMode {
                 follower.setMaxPower(0.6);
                 follower.followPath(scorePreload);
                 EServo.setPosition(0);
-                uplifthang(400);
+                setMec(0);
                 setPathState(101);
 
 
@@ -204,7 +206,7 @@ public class test01 extends OpMode {
             case 101:
                 if(follower.getPose().getX() > (hang_Sp1.getX() - 1) && follower.getPose().getY() > (hang_Sp1.getY() - 1)) {
                     follower.followPath(scorePreload);
-
+                    setMec(2);
                     EServo.setPosition(1);
                     Servo_kan(0.58);
                     Thread.sleep(700);
@@ -417,17 +419,13 @@ public class test01 extends OpMode {
                     follower.setMaxPower(0.9);
                     follower.followPath(hangSp2,false);
 
-                    uplifthang(350);
+                    setMec(1);
                     setPathState(103);
                 }
                 break;
             case 103:
                 if(!follower.isBusy()) {
-                    L1.setPower(0.9);
-                    L2.setPower(0.9);
-                    Thread.sleep(250);
-                    L1.setPower(0);
-                    L2.setPower(0);
+                    setMec(3);
                     setPathState(12);
                 }
                 break;
@@ -456,17 +454,13 @@ public class test01 extends OpMode {
                     follower.followPath(hangSp3,false);
                     L1.setPower(0);
                     L2.setPower(0);
-                    uplifthang(350);
+                    setMec(1);
                     setPathState(105);
                 }
                 break;
             case 105:
                 if(!follower.isBusy()) {
-                    L1.setPower(0.9);
-                    L2.setPower(0.9);
-                    Thread.sleep(250);
-                    L1.setPower(0);
-                    L2.setPower(0);
+                    setMec(3);
                     setPathState(14);
                 }
                 break;
@@ -496,17 +490,13 @@ public class test01 extends OpMode {
                     follower.followPath(hangSp4,false);
                     L1.setPower(0);
                     L2.setPower(0);
-                    uplifthang(350);
+                    setMec(1);
                     setPathState(108);
                 }
                 break;
             case 108:
                 if(!follower.isBusy()) {
-                    L1.setPower(0.9);
-                    L2.setPower(0.9);
-                    Thread.sleep(250);
-                    L1.setPower(0);
-                    L2.setPower(0);
+                    setMec(3);
                     setPathState(16);
                 }
                 break;
@@ -524,6 +514,14 @@ public class test01 extends OpMode {
                 Thread.sleep(450);
                 L1.setPower(0);
                 L2.setPower(0);
+                setMec(-1);
+            case 3:
+                L1.setPower(0.9);
+                L2.setPower(0.9);
+                Thread.sleep(250);
+                L1.setPower(0);
+                L2.setPower(0);
+                setMec(-1);
 
         }}
     /** These change the states of the paths and actions
@@ -612,20 +610,21 @@ public class test01 extends OpMode {
 
     private void uplifthang(int up) {
 
-            if ((L1.getCurrentPosition() + L2.getCurrentPosition()) / 2 <= up) {
-                L1.setPower(0.9);
-                L2.setPower(0.9);
+        if ((L1.getCurrentPosition() + L2.getCurrentPosition()) / 2 <= up) {
+            L1.setPower(0.9);
+            L2.setPower(0.9);
+            Servo_kan(0.3);
+            Kap_Hand.setPosition(1);
 
+        } else if ((L1.getCurrentPosition() + L2.getCurrentPosition()) / 2 > up) {
 
-            } else if ((L1.getCurrentPosition() + L2.getCurrentPosition()) / 2 > up) {
-                Servo_kan(0.3);
-                Kap_Hand.setPosition(1);
-                L1.setPower(0);
-                L2.setPower(0);
-                L1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-                L2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-                break;
-            }
+            L1.setPower(0);
+            L2.setPower(0);
+            L1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            L2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            setMec(-1);
+
+        }
 
 
 
