@@ -624,7 +624,7 @@ public class test01 extends OpMode {
                 L2.setPower(0);
                 L1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
                 L2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-                break;
+
             }
 
 

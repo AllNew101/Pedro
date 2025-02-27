@@ -39,10 +39,11 @@ public class AUTO_WITH_MUL extends OpMode {
      * It is used by the pathUpdate method. */
     private int pathState;
     private int mec;
-    private Servo RServo;
-    private Servo LServo;
-    private Servo Kap_Hand;
-    private Servo EServo;
+    private Servo rightservo;
+    private Servo leftservo;
+    private Servo neep;
+    private Servo spin;
+    private Servo wrist;
     private DcMotor L2 ;
     private DcMotor L1 ;
 
@@ -63,26 +64,27 @@ public class AUTO_WITH_MUL extends OpMode {
 
     /** Start Pose of our robot */
     private final Pose startPose = new Pose(0, 0, Math.toRadians(0));
-    private final Pose hang_Sp1 = new Pose(19, 0, Math.toRadians(0));
-    private final Pose Slide = new Pose(14, -18, Math.toRadians(0));
-    private final Pose pl_Sp1 = new Pose(31.5, -21, Math.toRadians(0));
-    private final Pose pl_Sp1_Slide = new Pose(31.5, -25, Math.toRadians(0));
-    private final Pose pl_Sp1_Back = new Pose(10, -25, Math.toRadians(0));
-    private final Pose pl_Sp2_FW = new Pose(31.5, -28, Math.toRadians(0));
-    private final Pose pl_Sp2_Slide = new Pose(31.5, -32, Math.toRadians(0));
-    private final Pose pl_Sp2_Back = new Pose(10, -32, Math.toRadians(0));
-    private final Pose pl_Sp3_FW = new Pose(31.5, -36, Math.toRadians(0));
-    private final Pose pl_Sp3_Slide = new Pose(31.5, -36, Math.toRadians(0));
-    private final Pose pl_Sp3_Back = new Pose(10, -36, Math.toRadians(0));
-    private final Pose human = new Pose(3, -36, Math.toRadians(0));
-    private final Pose hang_Sp2 = new Pose(18, -1, Math.toRadians(0));
-    private final Pose hang_Sp3 = new Pose(18, -0.8, Math.toRadians(0));
-    private final Pose hang_Sp4 = new Pose(18, -0.6, Math.toRadians(0));
-    private final Pose hang_Sp5 = new Pose(18, -0.4, Math.toRadians(0));
-    private final Pose keep_Sp = new Pose(4.5, -15, Math.toRadians(0));
+    private final Pose hang_Sp1 = new Pose(25, 0, Math.toRadians(0));
+    private final Pose Slide = new Pose(22, -25, Math.toRadians(0));
+    private final Pose pl_Sp1 = new Pose(50, -32, Math.toRadians(0));
+    private final Pose pl_Sp1_Slide = new Pose(50, -37, Math.toRadians(0));
+    private final Pose pl_Sp1_Back = new Pose(16, -37, Math.toRadians(0));
+    private final Pose pl_Sp2_FW = new Pose(50, -44, Math.toRadians(0));
+    private final Pose pl_Sp2_Slide = new Pose(50, -48, Math.toRadians(0));
+    private final Pose pl_Sp2_Back = new Pose(16, -48, Math.toRadians(0));
+    private final Pose pl_Sp3_FW = new Pose(50, -54, Math.toRadians(0));
+    private final Pose pl_Sp3_Slide = new Pose(50, -57, Math.toRadians(0));
+    private final Pose pl_Sp3_Back = new Pose(16, -57, Math.toRadians(0));
+    private final Pose human = new Pose(9, -57, Math.toRadians(0));
+    private final Pose keep_Sp = new Pose(10.5, -21, Math.toRadians(0));
+    private final Pose hang_Sp2 = new Pose(25, -1, Math.toRadians(0));
+    private final Pose hang_Sp3 = new Pose(25, -0.8, Math.toRadians(0));
+    private final Pose hang_Sp4 = new Pose(25, -0.6, Math.toRadians(0));
+    private final Pose hang_Sp5 = new Pose(25, -0.4, Math.toRadians(0));
 
 
-    private Path scorePreload, park;
+
+    private Path hang_preload, park;
     private PathChain grabPickup1, grabPickup2, grabPickup3, grabfood,  grabPickup5, grabPickup6,grabPickup7,grabPickup8,grabPickup9,grabPickup10,hangSp2,keepSp,hangSp3,hangSp4,hangSp5,keepSp1,keepSp2;
 
     /** Build the paths for the auto (adds, for example, constant/linear headings while doing paths)
@@ -105,8 +107,8 @@ public class AUTO_WITH_MUL extends OpMode {
          * Here is a explanation of the difference between Paths and PathChains <https://pedropathing.com/commonissues/pathtopathchain.html> */
 
         /* This is our scorePreload path. We are using a BezierLine, which is a straight line. */
-        scorePreload = new Path(new BezierLine(new Point(startPose), new Point(hang_Sp1)));
-        scorePreload.setLinearHeadingInterpolation(startPose.getHeading(), hang_Sp1.getHeading());
+        hang_preload = new Path(new BezierLine(new Point(startPose), new Point(hang_Sp1)));
+        hang_preload.setLinearHeadingInterpolation(startPose.getHeading(), hang_Sp1.getHeading());
 
         /* Here is an example for Constant Interpolation
         scorePreload.setConstantInterpolation(startPose.getHeading()); */
@@ -195,19 +197,22 @@ public class AUTO_WITH_MUL extends OpMode {
     public void autonomousPathUpdate() throws InterruptedException {
         switch (pathState) {
             case 0:
-                follower.setMaxPower(0.6);
-                follower.followPath(scorePreload);
-                EServo.setPosition(0);
-                setMec(0);
-                setPathState(101);
+                follower.setMaxPower(0.7);
+                follower.followPath(hang_preload);
+                neep.setPosition(1);
+
+
+                setMec(1);
+                setPathState(-1);
+
 
 
                 break;
             case 101:
                 if(follower.getPose().getX() > (hang_Sp1.getX() - 1) && follower.getPose().getY() > (hang_Sp1.getY() - 1)) {
-                    follower.followPath(scorePreload);
+                    follower.followPath(hang_preload);
                     setMec(2);
-                    EServo.setPosition(1);
+                    neep.setPosition(1);
                     Servo_kan(0.58);
                     Thread.sleep(700);
                     setPathState(1);
@@ -300,10 +305,10 @@ public class AUTO_WITH_MUL extends OpMode {
                     /* Score Preload */
                     /* Since this is a pathChain, we can have Pedro hold the end point while we are grabbing the sample */
                     follower.followPath(grabPickup5,true);
-                    L1.setPower(-0.4);
-                    L2.setPower(-0.4);
-                    Servo_kan(0.6);
-                    Kap_Hand.setPosition(0.24);
+//                    L1.setPower(-0.4);
+//                    L2.setPower(-0.4);
+//                    Servo_kan(0.6);
+//                    wrist.setPosition(0.24);
 
                     setPathState(6);
 
@@ -362,7 +367,7 @@ public class AUTO_WITH_MUL extends OpMode {
                     /* Since this is a pathChain, we can have Pedro hold the end point while we are grabbing the sample */
                     follower.followPath(grabPickup8,true);
 
-                    setPathState(10);
+                    setPathState(9);
 
                 }
                 break;
@@ -401,14 +406,14 @@ public class AUTO_WITH_MUL extends OpMode {
                     /* Since this is a pathChain, we can have Pedro hold the end point while we are grabbing the sample */
                     follower.followPath(grabPickup10,true);
 
-                    setPathState(102);
+                    setPathState(-1);
 
                 }
                 break;
 
             case 102:
                 if(!follower.isBusy()) {
-                    EServo.setPosition(0);
+                    neep.setPosition(0);
                     Thread.sleep(400);
                     setPathState(11);
                 }
@@ -431,9 +436,9 @@ public class AUTO_WITH_MUL extends OpMode {
                 break;
             case 12:
                 if(!follower.isBusy()) {
-                    EServo.setPosition(1);
+                    neep.setPosition(1);
                     Servo_kan(0.6);
-                    Kap_Hand.setPosition(0.19);
+                    wrist.setPosition(0.19);
                     L1.setPower(-0.45);
                     L2.setPower(-0.45);
                     Thread.sleep(100);
@@ -443,7 +448,7 @@ public class AUTO_WITH_MUL extends OpMode {
                 break;
             case 104:
                 if(!follower.isBusy()) {
-                    EServo.setPosition(0);
+                    neep.setPosition(0);
                     Thread.sleep(400);
                     setPathState(13);
                 }
@@ -466,9 +471,9 @@ public class AUTO_WITH_MUL extends OpMode {
                 break;
             case 14:
                 if(!follower.isBusy()) {
-                    EServo.setPosition(1);
+                    neep.setPosition(1);
                     Servo_kan(0.6);
-                    Kap_Hand.setPosition(0.19);
+                    wrist.setPosition(0.19);
                     L1.setPower(-0.45);
                     L2.setPower(-0.45);
                     Thread.sleep(100);
@@ -479,7 +484,7 @@ public class AUTO_WITH_MUL extends OpMode {
 
             case 106:
                 if(!follower.isBusy()) {
-                    EServo.setPosition(0);
+                    neep.setPosition(0);
                     Thread.sleep(400);
                     setPathState(15);
                 }
@@ -571,13 +576,13 @@ public class AUTO_WITH_MUL extends OpMode {
         follower.setStartingPose(startPose);
 
         buildPaths();
-        RServo = hardwareMap.get(Servo.class, "RServo");
-        LServo = hardwareMap.get(Servo.class, "LServo");
-        Kap_Hand = hardwareMap.get(Servo.class, "Kap_Hand");
-        EServo = hardwareMap.get(Servo.class, "EServo");
+        rightservo = hardwareMap.get(Servo.class, "rightservo");
+        leftservo = hardwareMap.get(Servo.class, "leftservo");
+        wrist = hardwareMap.get(Servo.class, "wrist");
+        neep = hardwareMap.get(Servo.class, "neep");
         L1 = hardwareMap.get(DcMotor.class, "L1");
         L2 = hardwareMap.get(DcMotor.class, "L2");
-        Kap_Hand.setDirection(Servo.Direction.REVERSE);
+        wrist.setDirection(Servo.Direction.REVERSE);
         L1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         L2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         L2.setDirection(DcMotor.Direction.REVERSE);
@@ -604,17 +609,17 @@ public class AUTO_WITH_MUL extends OpMode {
     }
 
     private void Servo_kan(double right) {
-        RServo.setPosition(1 - right);
-        LServo.setPosition(right);
+        rightservo.setPosition(1 - right);
+        leftservo.setPosition(right);
     }
 
     private void uplifthang(int up) {
 
         if ((L1.getCurrentPosition() + L2.getCurrentPosition()) / 2 <= up) {
-            L1.setPower(0.9);
-            L2.setPower(0.9);
-            Servo_kan(0.3);
-            Kap_Hand.setPosition(1);
+            L1.setPower(0.95);
+            L2.setPower(0.95);
+            Servo_kan(0.4);
+            wrist.setPosition(1);
 
         } else if ((L1.getCurrentPosition() + L2.getCurrentPosition()) / 2 > up) {
 
