@@ -29,7 +29,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.util.Timer;
  * @version 2.0, 11/28/2024
  */
 
-@Autonomous(name = "mutiple")
+@Autonomous(name = "AutoSpecimen")
 public class AUTO_WITH_MUL extends OpMode {
 
     private Follower follower;
