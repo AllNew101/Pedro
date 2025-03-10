@@ -29,8 +29,8 @@ import org.firstinspires.ftc.teamcode.pedroPathing.util.Timer;
  * @version 2.0, 11/28/2024
  */
 
-@Autonomous(name = "AutoSpecimen_BLUE")
-public class AUTO_WITH_MUL extends OpMode {
+@Autonomous(name = "AutoSpecimen_Red")
+public class RED_AUTO_MUL extends OpMode {
 
     private Follower follower;
     private Timer pathTimer, actionTimer, opmodeTimer;
@@ -74,7 +74,7 @@ public class AUTO_WITH_MUL extends OpMode {
     private final Pose pl_Sp2_Back = new Pose(16, -48, Math.toRadians(0));
     private final Pose pl_Sp3_FW = new Pose(50, -54, Math.toRadians(0));
     private final Pose pl_Sp3_Slide = new Pose(50, -57, Math.toRadians(0));
-    private final Pose human_Sp2 = new Pose(10.9, -57, Math.toRadians(0));
+    private final Pose human_Sp2 = new Pose(13, -57, Math.toRadians(0));
     private final Pose hang_Sp2 = new Pose(26, 0, Math.toRadians(0));
     private final Pose keep_Sp3 = new Pose(10.8, -30, Math.toRadians(0));
     private final Pose hang_Sp3 = new Pose(25, -2, Math.toRadians(0));
@@ -321,7 +321,7 @@ public class AUTO_WITH_MUL extends OpMode {
                 break;
             case 10:
                 if(follower.getPose().getX() < (pl_Sp3_Slide.getX() + 1) && Math.abs(follower.getPose().getY()) > Math.abs(pl_Sp3_Slide.getY()) - 1) {
-                    follower.setMaxPower(0.8);
+                    follower.setMaxPower(1);
                     follower.followPath(Point10_Sp4keep,true);
 
                     setPathState(102);

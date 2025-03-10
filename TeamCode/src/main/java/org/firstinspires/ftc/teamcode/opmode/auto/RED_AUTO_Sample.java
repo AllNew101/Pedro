@@ -29,8 +29,8 @@ import org.firstinspires.ftc.teamcode.pedroPathing.util.Timer;
  * @version 2.0, 11/28/2024
  */
 
-@Autonomous(name = "AutoSample_BLUE")
-public class AUTO_Sample extends OpMode {
+@Autonomous(name = "AutoSamples_RED")
+public class RED_AUTO_Sample extends OpMode {
 
     private Follower follower;
     private Timer pathTimer, actionTimer, opmodeTimer;
@@ -53,10 +53,10 @@ public class AUTO_Sample extends OpMode {
     private final Pose startPose = new Pose(0, 0, Math.toRadians(0));
     private final Pose set_Sample = new Pose(-18, 4, Math.toRadians(45));
     private final Pose keep_S2 = new Pose(-11, 11.8, Math.toRadians(90));
-    private final Pose set_Sample2 = new Pose(-20, 8, Math.toRadians(60));
-    private final Pose keep_S3 = new Pose(-19.5, 11.5, Math.toRadians(90));
+    private final Pose set_Sample2 = new Pose(-18, 8, Math.toRadians(23));
+    private final Pose keep_S3 = new Pose(-18.3, 11.5, Math.toRadians(90));
     private final Pose set_Sample3 = new Pose(-20, 6.5, Math.toRadians(28));
-    private final Pose keep_S4 = new Pose(-18.8, 12.8, Math.toRadians(110));
+    private final Pose keep_S4 = new Pose(-18.8, 12.8, Math.toRadians(114));
     private final Pose set_Sample4 = new Pose(-21.5, 10, Math.toRadians(55));
     private final Pose b_final = new Pose(-21.5, 55, Math.toRadians(55));
     private final Pose final0 = new Pose(12.28,55.72,Math.toRadians(0));
@@ -114,7 +114,7 @@ public class AUTO_Sample extends OpMode {
     public void autonomousPathUpdate() throws InterruptedException {
         switch (pathState) {
             case 0:
-                follower.setMaxPower(0.9);
+                follower.setMaxPower(1);
                 neep.setPosition(1);
                 setMec(0);
                 follower.followPath(Point1_set);
@@ -137,7 +137,7 @@ public class AUTO_Sample extends OpMode {
                 break;
             case 1:
                 if (Math.abs(follower.getPose().getX()) > Math.abs((set_Sample.getX())) - 1 && follower.getPose().getY() > (set_Sample.getY()) - 1) {
-                    follower.setMaxPower(0.6);
+                    follower.setMaxPower(0.8);
                     setMec(1);
                     follower.followPath(keepS2);
                     setPathState(2);
@@ -146,7 +146,7 @@ public class AUTO_Sample extends OpMode {
 
             case 2:
                 if (!follower.isBusy()) {
-                    follower.setMaxPower(0.8);
+                    follower.setMaxPower(1);
                     Servo_kan(0);
                     wrist.setPosition(1);
                     Thread.sleep(250);
@@ -160,7 +160,7 @@ public class AUTO_Sample extends OpMode {
             case 102:
                 if (!follower.isBusy()) {
                     neep.setPosition(0);
-                    Thread.sleep(800);
+                    Thread.sleep(350);
                     setPathState(1021);
                 }
                 break;
@@ -173,7 +173,7 @@ public class AUTO_Sample extends OpMode {
                 break;
             case 3:
                 if (Math.abs(follower.getPose().getX()) > Math.abs((set_Sample2.getX())) - 1 && Math.abs(follower.getPose().getY()) < Math.abs(set_Sample2.getY()) + 1) {
-                    follower.setMaxPower(0.6);
+                    follower.setMaxPower(0.8);
                     setMec(1);
                     follower.followPath(keepS3);
                     setPathState(4);
@@ -181,7 +181,7 @@ public class AUTO_Sample extends OpMode {
                 break;
             case 4:
                 if (!follower.isBusy()) {
-                    follower.setMaxPower(0.8);
+                    follower.setMaxPower(1);
                     Servo_kan(0);
                     wrist.setPosition(1);
                     Thread.sleep(250);
@@ -195,7 +195,7 @@ public class AUTO_Sample extends OpMode {
             case 103:
                 if (!follower.isBusy()) {
                     neep.setPosition(0);
-                    Thread.sleep(700);
+                    Thread.sleep(550);
                     setPathState(1031);
                 }
                 break;
@@ -209,7 +209,7 @@ public class AUTO_Sample extends OpMode {
                 break;
             case 5:
                 if (Math.abs(follower.getPose().getX()) > Math.abs((set_Sample3.getX())) - 1 && Math.abs(follower.getPose().getY()) < Math.abs(set_Sample3.getY()) + 1) {
-                    follower.setMaxPower(0.6);
+                    follower.setMaxPower(0.8);
                     setMec(1);
                     follower.followPath(keepS4);
                     setPathState(6);
@@ -217,10 +217,10 @@ public class AUTO_Sample extends OpMode {
                 break;
             case 6:
                 if (!follower.isBusy()) {
-                    follower.setMaxPower(0.8);
+                    follower.setMaxPower(1);
                     Servo_kan(0);
                     wrist.setPosition(1);
-                    Thread.sleep(500);
+                    Thread.sleep(250);
                     neep.setPosition(1);
                     Thread.sleep(200);
                     setMec(0);
@@ -231,7 +231,7 @@ public class AUTO_Sample extends OpMode {
             case 104:
                 if (!follower.isBusy()) {
                     neep.setPosition(0);
-                    Thread.sleep(700);
+                    Thread.sleep(350);
                     setPathState(1041);
                 }
                 break;
@@ -374,8 +374,8 @@ public class AUTO_Sample extends OpMode {
         if (Math.abs(L2.getCurrentPosition()) >= 25) {
             L1.setPower(-1);
             L2.setPower(-1);
-            }
-         else {
+        }
+        else {
             L1.setPower(0);
             L2.setPower(0);
             L1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
