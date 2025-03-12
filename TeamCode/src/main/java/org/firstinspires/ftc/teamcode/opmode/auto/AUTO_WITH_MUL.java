@@ -64,7 +64,7 @@ public class AUTO_WITH_MUL extends OpMode {
 
     /** Start Pose of our robot */
     private final Pose startPose = new Pose(0, 0, Math.toRadians(0));
-    private final Pose hang_Sp1 = new Pose(25, 2, Math.toRadians(0));
+    private final Pose hang_Sp1 = new Pose(26, 2, Math.toRadians(0));
     private final Pose Slide_Sp1 = new Pose(22, -25, Math.toRadians(0));
     private final Pose pl_Sp1_FW = new Pose(50, -32, Math.toRadians(0));
     private final Pose pl_Sp1_Slide = new Pose(50, -39, Math.toRadians(0));
@@ -79,7 +79,7 @@ public class AUTO_WITH_MUL extends OpMode {
     private final Pose keep_Sp3 = new Pose(10.8, -30, Math.toRadians(0));
     private final Pose hang_Sp3 = new Pose(25, -2, Math.toRadians(0));
     private final Pose hang_Sp4 = new Pose(25, -5.5, Math.toRadians(0));
-    private final Pose hang_Sp5 = new Pose(25, -7, Math.toRadians(0));
+    private final Pose hang_Sp5 = new Pose(25, -8, Math.toRadians(0));
     private final Pose End = new Pose(11.8, -38, Math.toRadians(0));
 
 
@@ -303,6 +303,7 @@ public class AUTO_WITH_MUL extends OpMode {
 
                 if(follower.getPose().getX() < (pl_Sp2_Back.getX() + 1) && Math.abs(follower.getPose().getY()) > Math.abs(pl_Sp2_Back.getY()) - 1 ) {
                     follower.setMaxPower(1);
+                    spin.setPosition(0);
                     follower.followPath(Point8_Sp4FW,true);
 
                     setPathState(9);
@@ -322,6 +323,7 @@ public class AUTO_WITH_MUL extends OpMode {
             case 10:
                 if(follower.getPose().getX() < (pl_Sp3_Slide.getX() + 1) && Math.abs(follower.getPose().getY()) > Math.abs(pl_Sp3_Slide.getY()) - 1) {
                     follower.setMaxPower(0.8);
+                    spin.setPosition(0);
                     follower.followPath(Point10_Sp4keep,true);
 
                     setPathState(102);
