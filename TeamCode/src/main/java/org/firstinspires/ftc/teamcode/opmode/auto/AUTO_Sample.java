@@ -56,7 +56,7 @@ public class AUTO_Sample extends OpMode {
     private final Pose set_Sample2 = new Pose(-20, 8, Math.toRadians(60));
     private final Pose keep_S3 = new Pose(-19.5, 11.5, Math.toRadians(90));
     private final Pose set_Sample3 = new Pose(-20, 6.5, Math.toRadians(28));
-    private final Pose keep_S4 = new Pose(-19.5, 13, Math.toRadians(112.5));
+    private final Pose keep_S4 = new Pose(-19.5, 13.5, Math.toRadians(112));
     private final Pose set_Sample4 = new Pose(-21.5, 10, Math.toRadians(55));
     private final Pose b_final = new Pose(-21.5, 55, Math.toRadians(55));
     private final Pose final0 = new Pose(12.28,55.72,Math.toRadians(0));
@@ -356,7 +356,7 @@ public class AUTO_Sample extends OpMode {
 
 
     private void upliftset(int up) {
-        wrist.setPosition(0.43);
+        wrist.setPosition(0.36);
         spin.setPosition(0);
         if (L2.getCurrentPosition() < up) {
             Servo_kan(0.4);

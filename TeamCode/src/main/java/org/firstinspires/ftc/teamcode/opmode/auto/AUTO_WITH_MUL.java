@@ -64,7 +64,7 @@ public class AUTO_WITH_MUL extends OpMode {
 
     /** Start Pose of our robot */
     private final Pose startPose = new Pose(0, 0, Math.toRadians(0));
-    private final Pose hang_Sp1 = new Pose(26, 2, Math.toRadians(0));
+    private final Pose hang_Sp1 = new Pose(24.5, 2, Math.toRadians(0));
     private final Pose Slide_Sp1 = new Pose(22, -25, Math.toRadians(0));
     private final Pose pl_Sp1_FW = new Pose(50, -32, Math.toRadians(0));
     private final Pose pl_Sp1_Slide = new Pose(50, -39, Math.toRadians(0));
@@ -77,7 +77,7 @@ public class AUTO_WITH_MUL extends OpMode {
     private final Pose human_Sp2 = new Pose(10.9, -57, Math.toRadians(0));
     private final Pose hang_Sp2 = new Pose(26, 0, Math.toRadians(0));
     private final Pose keep_Sp3 = new Pose(10.8, -30, Math.toRadians(0));
-    private final Pose hang_Sp3 = new Pose(25, -2, Math.toRadians(0));
+    private final Pose hang_Sp3 = new Pose(25, -2.5, Math.toRadians(0));
     private final Pose hang_Sp4 = new Pose(25, -5.5, Math.toRadians(0));
     private final Pose hang_Sp5 = new Pose(25, -8, Math.toRadians(0));
     private final Pose End = new Pose(11.8, -38, Math.toRadians(0));
@@ -201,7 +201,8 @@ public class AUTO_WITH_MUL extends OpMode {
                 follower.followPath(hang_preload);
                 neep.setPosition(1);
                 Servo_kan(0.44);
-                wrist.setPosition(0.72);
+                wrist.setPosition(0.68);
+                spin.setPosition(1);
                 setPathState(101);
 
 
@@ -212,7 +213,7 @@ public class AUTO_WITH_MUL extends OpMode {
                     follower.followPath(hang_preload);
                     neep.setPosition(1);
                     Servo_kan(0.15);
-                    Thread.sleep(400);
+                    Thread.sleep(500);
                     neep.setPosition(0);
                     setPathState(1);
                 }
@@ -230,7 +231,7 @@ public class AUTO_WITH_MUL extends OpMode {
                     /* Score Preload */
                     /* Since this is a pathChain, we can have Pedro hold the end point while we are grabbing the sample */
 
-                    wrist.setPosition(0.6);
+                    wrist.setPosition(0.48);
                     Servo_kan(1);
                     Thread.sleep(100);
                     follower.followPath(Point1_hang,true);
@@ -250,7 +251,7 @@ public class AUTO_WITH_MUL extends OpMode {
             case 3:
 
                 if(follower.getPose().getX() > (pl_Sp1_FW.getX() - 1) && Math.abs(follower.getPose().getY()) > Math.abs(pl_Sp1_FW.getY()) -1) {
-                    follower.setMaxPower(0.8);
+                    follower.setMaxPower(1);
                     /* Score Preload */
                     /* Since this is a pathChain, we can have Pedro hold the end point while we are grabbing the sample */
                     follower.followPath(Point3_Sp2Sl,true);
@@ -336,7 +337,7 @@ public class AUTO_WITH_MUL extends OpMode {
                     neep.setPosition(1);
                     Thread.sleep(200);
                     Servo_kan(0.44);
-                    wrist.setPosition(0.7);
+                    wrist.setPosition(0.66);
                     spin.setPosition(1);
                     setPathState(11);
                 }
@@ -353,7 +354,7 @@ public class AUTO_WITH_MUL extends OpMode {
                 if(!follower.isBusy()) {
                     neep.setPosition(1);
                     Servo_kan(0.16);
-                    Thread.sleep(400);
+                    Thread.sleep(500);
                     neep.setPosition(0);
                     setPathState(12);
                 }
@@ -361,7 +362,7 @@ public class AUTO_WITH_MUL extends OpMode {
             case 12:
                 if(follower.getPose().getX() > (hang_Sp2.getX() - 1) && Math.abs(follower.getPose().getY()) < Math.abs(hang_Sp2.getY()) + 1) {
                     follower.setMaxPower(1);
-                    wrist.setPosition(0.55);
+                    wrist.setPosition(0.48);
                     Servo_kan(1);
                     Thread.sleep(200);
                     spin.setPosition(0);
@@ -374,7 +375,7 @@ public class AUTO_WITH_MUL extends OpMode {
                     neep.setPosition(1);
                     Thread.sleep(200);
                     Servo_kan(0.44);
-                    wrist.setPosition(0.7);
+                    wrist.setPosition(0.66);
                     spin.setPosition(1);
                     setPathState(13);
                 }
@@ -390,7 +391,7 @@ public class AUTO_WITH_MUL extends OpMode {
                 if(!follower.isBusy())  {
                     neep.setPosition(1);
                     Servo_kan(0.16);
-                    Thread.sleep(400);
+                    Thread.sleep(500);
                     neep.setPosition(0);
                     setPathState(14);
                 }
@@ -398,7 +399,7 @@ public class AUTO_WITH_MUL extends OpMode {
             case 14:
                 if(follower.getPose().getX() > (hang_Sp3.getX() - 1) && Math.abs(follower.getPose().getY()) < Math.abs(hang_Sp3.getY()) + 1)  {
                     follower.setMaxPower(1);
-                    wrist.setPosition(0.55);
+                    wrist.setPosition(0.48);
                     Servo_kan(1);
                     Thread.sleep(200);
                     spin.setPosition(0);
@@ -412,7 +413,7 @@ public class AUTO_WITH_MUL extends OpMode {
                     neep.setPosition(1);
                     Thread.sleep(200);
                     Servo_kan(0.44);
-                    wrist.setPosition(0.7);
+                    wrist.setPosition(0.66);
                     spin.setPosition(1);
                     setPathState(15);
                 }
@@ -428,7 +429,7 @@ public class AUTO_WITH_MUL extends OpMode {
                 if(!follower.isBusy())   {
                     neep.setPosition(1);
                     Servo_kan(0.16);
-                    Thread.sleep(400);
+                    Thread.sleep(500);
                     neep.setPosition(0);
                     setPathState(16);
                 }
@@ -437,7 +438,7 @@ public class AUTO_WITH_MUL extends OpMode {
             case 16:
                 if(follower.getPose().getX() > (hang_Sp4.getX() - 1) && Math.abs(follower.getPose().getY()) < Math.abs(hang_Sp4.getY()) + 1)  {
                     follower.setMaxPower(1);
-                    wrist.setPosition(0.55);
+                    wrist.setPosition(0.48);
                     Servo_kan(1);
                     Thread.sleep(110);
                     spin.setPosition(0);
@@ -451,7 +452,7 @@ public class AUTO_WITH_MUL extends OpMode {
                     neep.setPosition(1);
                     Thread.sleep(200);
                     Servo_kan(0.44);
-                    wrist.setPosition(0.7);
+                    wrist.setPosition(0.62);
                     spin.setPosition(1);
                     setPathState(17);
                 }
@@ -466,23 +467,23 @@ public class AUTO_WITH_MUL extends OpMode {
             case 110:
                 if(!follower.isBusy()) {
                     Servo_kan(0.15);
-                    Thread.sleep(400);
+                    Thread.sleep(500);
                     neep.setPosition(0);
                     setPathState(18);
                 }
                 break;
             case 18:
                 if(follower.getPose().getX() > (hang_Sp5.getX() - 1) && Math.abs(follower.getPose().getY()) < Math.abs(hang_Sp5.getY()) + 1)  {
-                    wrist.setPosition(0.6);
+                    wrist.setPosition(0.48);
                     Servo_kan(1);
                     spin.setPosition(0);
-                    Thread.sleep(200);
                     setPathState(19);
                 }
                 break;
             case 19:
                 if(!follower.isBusy()) {
                     follower.setMaxPower(1);
+                    Thread.sleep(800);
                     follower.followPath(Finish,true);
                     setPathState(-1);
                 }
