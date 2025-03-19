@@ -321,7 +321,7 @@ public class S6 extends OpMode {
 //        myColorBlobLocatorProcessorBuilder.setTargetColorRange(new ColorRange(ColorSpace.RGB, new Scalar(30, 30, 10), new Scalar(200, 255, 25)));
         myColorBlobLocatorProcessorBuilder.setTargetColorRange(ColorRange.YELLOW);
 
-        myColorBlobLocatorProcessorBuilder.setRoi(ImageRegion.asUnityCenterCoordinates(0.5, 0.6, 1, -0.2));
+        myColorBlobLocatorProcessorBuilder.setRoi(ImageRegion.asUnityCenterCoordinates(0.4, 0.35, 1, -0.15));
 
         myColorBlobLocatorProcessorBuilder.setContourMode(ColorBlobLocatorProcessor.ContourMode.EXTERNAL_ONLY);
 
@@ -372,7 +372,7 @@ public class S6 extends OpMode {
         time2 = System.currentTimeMillis();
         while ((System.currentTimeMillis() - time2) <= 100) {
             myBlobs = myColorBlobLocatorProcessor.getBlobs();
-            ColorBlobLocatorProcessor.Util.filterByArea(200, 7000, myBlobs);
+            ColorBlobLocatorProcessor.Util.filterByArea(1000, 7000, myBlobs);
             for (ColorBlobLocatorProcessor.Blob myBlob_item : myBlobs) {
                 check = true;
                 myBlob = myBlob_item;
