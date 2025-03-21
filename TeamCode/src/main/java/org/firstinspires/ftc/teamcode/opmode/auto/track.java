@@ -42,9 +42,9 @@ public class track extends OpMode {
     org.opencv.core.Point[] myPoints;
     public double max_area = 6000;
     public double min_area = 1000;
-    public final double Perfect_X = 289.22;
-    public final double Perfect_Y = 134.02;
-    public double ti_me = 300.0;
+    public final double Perfect_X = 142;
+    public final double Perfect_Y = 199;
+    public double ti_me = 100.0;
 
     public List data_right;
     List data_return = Arrays.asList(0,0,0.0,0.0);
@@ -107,8 +107,10 @@ public class track extends OpMode {
                 }
                 if (mySize.width / mySize.height > 1) {vertical = false;}
                 else if (mySize.width / mySize.height < 1){vertical = true;}
+                if (vertical){
+                    data_right.add(JavaUtil.createListWith(Math.round(Math.sqrt(Math.pow(Perfect_X - myBoxFit.center.x, 2) + Math.pow(Perfect_Y - myBoxFit.center.y, 2))), vertical, myBoxFit.center.x, myBoxFit.center.y));
+                }
 
-                data_right.add(JavaUtil.createListWith(Math.round(Math.sqrt(Math.pow(Perfect_X - myBoxFit.center.x, 2) + Math.pow(Perfect_Y - myBoxFit.center.y, 2))), vertical, myBoxFit.center.x, myBoxFit.center.y));
 
 
             }
@@ -123,15 +125,35 @@ public class track extends OpMode {
         if (JavaUtil.listLength(data_right) != 0) {
             if (((Boolean) JavaUtil.inListGet((((List) JavaUtil.inListGet(data_right, JavaUtil.AtMode.FROM_START, (int) 0, false))), JavaUtil.AtMode.FROM_START, (int) 1, false)).booleanValue() == true) {
                 data_return.set(0,0);
-                right_x = 0.5;
-                right_y = 0.65;
 
-                } else if (((Boolean) JavaUtil.inListGet((((List) JavaUtil.inListGet(data_right, JavaUtil.AtMode.FROM_START, (int) 0, false))), JavaUtil.AtMode.FROM_START, (int) 1, false)).booleanValue() == false) {
-                data_return.set(0,1);
-                right_x = 0.4;
-                right_y = 1.1;
+                if ((160.0 - ((Double) JavaUtil.inListGet((((List) JavaUtil.inListGet(data_right, JavaUtil.AtMode.FROM_START, (int) 0, false))), JavaUtil.AtMode.FROM_START, (int) 2, false)).doubleValue()) > 0){
+                   //right
+                    if ((120.0 - ((Double) JavaUtil.inListGet((((List) JavaUtil.inListGet(data_right, JavaUtil.AtMode.FROM_START, (int) 0, false))), JavaUtil.AtMode.FROM_START, (int) 3, false)).doubleValue()) > 0){
+                        //Front
+                        right_x = 1;
+                        right_y = 0.8;
+                    }
+                    else{
+                        //Back
+                        right_x = 1;
+                        right_y = 0.8;
+                    }
+                }
+                else{
+                    //left
 
-            }
+                    if ((120.0 - ((Double) JavaUtil.inListGet((((List) JavaUtil.inListGet(data_right, JavaUtil.AtMode.FROM_START, (int) 0, false))), JavaUtil.AtMode.FROM_START, (int) 3, false)).doubleValue()) > 0){
+                        //Front
+                        right_x = 0.8;
+                        right_y = 0.9;
+                    }
+                    else{
+                        //Back
+                        right_x = 0.76;
+                        right_y = 0.9;
+                    }
+                }
+                }
 
             if ((Long)JavaUtil.inListGet((((List) JavaUtil.inListGet(data_right, JavaUtil.AtMode.FROM_START, (int) 0, false))), JavaUtil.AtMode.FROM_START, (int) 0, false) <= 20) {
                 data_return.set(1,1);

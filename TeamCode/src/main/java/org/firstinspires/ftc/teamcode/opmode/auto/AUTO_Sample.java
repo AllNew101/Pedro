@@ -8,6 +8,7 @@ import  com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.JavaUtil;
 import org.firstinspires.ftc.teamcode.pedroPathing.follower.*;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.BezierCurve;
@@ -16,6 +17,9 @@ import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Path;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.PathChain;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Point;
 import org.firstinspires.ftc.teamcode.pedroPathing.util.Timer;
+import org.firstinspires.ftc.vision.opencv.ColorRange;
+
+import java.util.List;
 
 //import org.firstinspires.ftc.teamcode.config.subsystem.ClawSubsystem;
 
@@ -47,26 +51,28 @@ public class AUTO_Sample extends OpMode {
     private Servo P3;
     private DcMotor L2 ;
     private DcMotor L1 ;
-
+    private track track_color ;
+    private List keeper = JavaUtil.createListWith();
 
 
     private final Pose startPose = new Pose(0, 0, Math.toRadians(0));
     private final Pose set_Sample = new Pose(-18, 4, Math.toRadians(45));
     private final Pose keep_S2 = new Pose(-11, 11.8, Math.toRadians(90));
     private final Pose set_Sample2 = new Pose(-20, 8, Math.toRadians(60));
-    private final Pose keep_S3 = new Pose(-19.5, 11.5, Math.toRadians(90));
-    private final Pose set_Sample3 = new Pose(-20, 6.5, Math.toRadians(28));
-    private final Pose keep_S4 = new Pose(-19.5, 13.5, Math.toRadians(112));
+    private final Pose keep_S3 = new Pose(-20, 11.5, Math.toRadians(90));
+    private final Pose set_Sample3 = new Pose(-22, 8, Math.toRadians(50));
+    private final Pose keep_S4 = new Pose(-20.8, 13.5, Math.toRadians(112));
     private final Pose set_Sample4 = new Pose(-21.5, 10, Math.toRadians(55));
-    private final Pose b_final = new Pose(-21.5, 55, Math.toRadians(55));
-    private final Pose final0 = new Pose(12.28,55.72,Math.toRadians(0));
-
-
+    private final Pose b_final = new Pose(-10, 55, Math.toRadians(55));
+    private Pose final0 = new Pose(12.5,55.72,Math.toRadians(0));
+    private Pose keep_S5 = new Pose(12.5,51.72,Math.toRadians(0));
+    private final Pose set_Sample5 = new Pose(-24, 8, Math.toRadians(45));
+    private  Pose final1 = new Pose(7.28,55.72,Math.toRadians(0));
 
 
 
     private Path Point1_set;
-    private PathChain keepS2, keepS3, Point2_set,  Point3_set, keepS4,Point4_set,finale,Point9_Sp4Sl,Point10_Sp4keep,hangSp2,keepSp3,hangSp3,hangSp4,hangSp5,keepSp1,keepSp2,Finish;
+    private PathChain keepS2, keepS3, Point2_set,  Point3_set, keepS4,Point4_set,finale,keep5,set_Sample_5,keep6,keepSp3,hangSp3,hangSp4,hangSp5,keepSp1,keepSp2,Finish;
 
     /** Build the paths for the auto (adds, for example, constant/linear headings while doing paths)
      * It is necessary to do this so that all the paths are built before the auto starts. **/
@@ -104,7 +110,18 @@ public class AUTO_Sample extends OpMode {
                 .addPath(new BezierCurve(new Point(set_Sample4),new Point(b_final), new Point(final0)))
                 .setLinearHeadingInterpolation(set_Sample4.getHeading(), final0.getHeading())
                 .build();
-
+        keep5 = follower.pathBuilder()
+                .addPath(new BezierLine(new Point(final0), new Point(keep_S5)))
+                .setLinearHeadingInterpolation(final0.getHeading(), keep_S5.getHeading())
+                .build();
+        set_Sample_5 = follower.pathBuilder()
+                .addPath(new BezierCurve(new Point(keep_S5),new Point(b_final), new Point(set_Sample5)))
+                .setLinearHeadingInterpolation(keep_S5.getHeading(), set_Sample5.getHeading())
+                .build();
+        keep6 = follower.pathBuilder()
+                .addPath(new BezierCurve(new Point(set_Sample5),new Point(b_final), new Point(final1)))
+                .setLinearHeadingInterpolation(set_Sample5.getHeading(), final1.getHeading())
+                .build();
 
     }
 
@@ -160,20 +177,20 @@ public class AUTO_Sample extends OpMode {
             case 102:
                 if (!follower.isBusy()) {
                     neep.setPosition(0);
-                    Thread.sleep(800);
+                    Thread.sleep(700);
                     setPathState(1021);
                 }
                 break;
             case 1021:
                 if (!follower.isBusy()) {
-                    Servo_kan(0.08);
+                    Servo_kan(0.12);
                     wrist.setPosition(1);
                     setPathState(3);
                 }
                 break;
             case 3:
-                if (Math.abs(follower.getPose().getX()) > Math.abs((set_Sample2.getX())) - 1 && Math.abs(follower.getPose().getY()) < Math.abs(set_Sample2.getY()) + 1) {
-                    follower.setMaxPower(0.6);
+                if (Math.abs(follower.getPose().getX()) > Math.abs((set_Sample2.getX())) - 0.25 && Math.abs(follower.getPose().getY()) < Math.abs(set_Sample2.getY()) + 0.25) {
+                    follower.setMaxPower(0.5);
                     setMec(1);
                     follower.followPath(keepS3);
                     setPathState(4);
@@ -195,7 +212,7 @@ public class AUTO_Sample extends OpMode {
             case 103:
                 if (!follower.isBusy()) {
                     neep.setPosition(0);
-                    Thread.sleep(700);
+                    Thread.sleep(850);
                     setPathState(1031);
                 }
                 break;
@@ -208,7 +225,7 @@ public class AUTO_Sample extends OpMode {
                 }
                 break;
             case 5:
-                if (Math.abs(follower.getPose().getX()) > Math.abs((set_Sample3.getX())) - 1 && Math.abs(follower.getPose().getY()) < Math.abs(set_Sample3.getY()) + 1) {
+                if (Math.abs(follower.getPose().getX()) > Math.abs((set_Sample3.getX())) - 0.25 && Math.abs(follower.getPose().getY()) < Math.abs(set_Sample3.getY()) + 0.25) {
                     follower.setMaxPower(0.6);
                     setMec(1);
                     follower.followPath(keepS4);
@@ -231,7 +248,7 @@ public class AUTO_Sample extends OpMode {
             case 104:
                 if (!follower.isBusy()) {
                     neep.setPosition(0);
-                    Thread.sleep(900);
+                    Thread.sleep(700);
                     setPathState(1041);
                 }
                 break;
@@ -253,9 +270,82 @@ public class AUTO_Sample extends OpMode {
                 break;
             case 777:
                 if (!follower.isBusy()) {
-                    P3.setPosition(0.18);
-                    Thread.sleep(500);
-                    setPathState(-1);
+                    P3.setPosition(0.13);
+                    setPathState(80);
+                }
+            case 80:
+                if (!follower.isBusy()) {
+                    upread();
+                    final0 = new Pose(follower.getPose().getX(), follower.getPose().getY(), Math.toRadians(0));
+                    follower.setMaxPower(0.8);
+
+                    track_color.min_area = 2000;
+                    keeper = track_color.track();
+                    telemetry.addData("Read",keeper);
+                    telemetry.addData("Read",track_color.data_right);
+                    spin.setPosition(0);
+                    if ((Integer) keeper.get(1) == 1){
+                        setPathState(802);
+                    } else{
+                        keep_S5 = new Pose(follower.getPose().getX() + (double)keeper.get(3),follower.getPose().getY() + (double)keeper.get(2),0);
+                        keep5 = follower.pathBuilder()
+                                .addPath(new BezierLine(new Point(final0), new Point(keep_S5)))
+                                .setLinearHeadingInterpolation(final0.getHeading(), keep_S5.getHeading())
+                                .build();
+                        follower.followPath(keep5);
+                        if ((Integer) keeper.get(1) == 2){
+                            setPathState(802);
+                        }
+                        else{
+                            keep_S5 = new Pose(follower.getPose().getX(),follower.getPose().getY() + 3,0);
+                            keep5 = follower.pathBuilder()
+                                    .addPath(new BezierLine(new Point(final0), new Point(keep_S5)))
+                                    .setLinearHeadingInterpolation(final0.getHeading(), keep_S5.getHeading())
+                                    .build();
+                            follower.followPath(keep5);
+                            setPathState(80);
+                        }
+                    }
+
+                }
+                break;
+            case 802:
+                if (!follower.isBusy()) {
+                    downkeep();
+                    setPathState(8);
+
+                }
+                break;
+            case 8:
+                if (!follower.isBusy()) {
+                    follower.setMaxPower(0.8);
+                    follower.followPath(set_Sample_5);
+                    setPathState(201);
+                }
+                break;
+            case 201:
+                if (Math.abs(follower.getPose().getX()) > Math.abs(set_Sample5.getX()) - 16 && follower.getPose().getY() < (set_Sample5.getY() + 30)) {
+                    setMec(0);
+                    setPathState(202);
+                }
+                break;
+            case 202:
+                if (!follower.isBusy()) {
+                    Thread.sleep(200);
+                    neep.setPosition(0);
+                    Thread.sleep(300);
+                    Servo_kan(0.15);
+                    setPathState(9);
+                }
+                break;
+            case 9:
+                if (!follower.isBusy()) {
+                    follower.setMaxPower(0.8);
+                    Servo_kan(0.15);
+                    wrist.setPosition(1);
+                    follower.followPath(keep6);
+                    setMec(1);
+                    setPathState(80);
                 }
         }
     }
@@ -313,6 +403,7 @@ public class AUTO_Sample extends OpMode {
         opmodeTimer.resetTimer();
 
         follower = new Follower(hardwareMap);
+        track_color = new track(hardwareMap, ColorRange.YELLOW);
         follower.setStartingPose(startPose);
 
         buildPaths();
@@ -371,8 +462,44 @@ public class AUTO_Sample extends OpMode {
             setMec(-1);
         }
     }
+    private void upread(){
+        while (true) {
+            if (L2.getCurrentPosition() <= 400) {
+                L1.setPower(0.6);
+                L2.setPower(0.6);
+                wrist.setPosition(0.8);
+                neep.setPosition(0.2);
+                Servo_kan(0);
+            } else {
+                L1.setPower(0.05);
+                L2.setPower(0.05);
+                L1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                L2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                break;
+            }}
+    }
+    private void downkeep() throws InterruptedException{
+        wrist.setPosition(1);
+        while (true) {
+            if (Math.abs(L2.getCurrentPosition()) >= 15) {
+                L1.setPower(-0.3);
+                L2.setPower(-0.3);
+            } else {
+                L1.setPower(0);
+                L2.setPower(0);
+                L1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                L2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                break;
+            }
+        }
+        Thread.sleep(250);
+        neep.setPosition(1);
+        Thread.sleep(250);
+        Servo_kan(0.15);
+        Thread.sleep(100);
+    }
     private void downlift(){
-        if (Math.abs(L2.getCurrentPosition()) >= 25) {
+        if (Math.abs(L2.getCurrentPosition()) >= 15) {
             L1.setPower(-1);
             L2.setPower(-1);
             }

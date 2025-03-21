@@ -163,20 +163,18 @@ public class S5 extends OpMode {
 
             case 80:
                 if (!follower.isBusy()) {
+                    upread();
                     Thread.sleep(800);
                     final0 = new Pose(follower.getPose().getX(), follower.getPose().getY(), Math.toRadians(0));
-                    follower.setMaxPower(0.9);
+                    follower.setMaxPower(0.8);
 
-                    Servo_kan(0.2);
-                    wrist.setPosition(1);
-                    neep.setPosition(0.2);
+                    track_color.min_area = 3000;
                     Thread.sleep(300);
                     keeper = track_color.track();
+                    telemetry.addData("Read",keeper);
+                    telemetry.addData("Read",track_color.data_right);
                     if ((Integer) keeper.get(0) == 0){
                         spin.setPosition(0);
-                    }
-                    else {
-                        spin.setPosition(0.5);
                     }
                     Thread.sleep(300);
                     if ((Integer) keeper.get(1) == 1){
@@ -206,14 +204,7 @@ public class S5 extends OpMode {
                 break;
             case 802:
                 if (!follower.isBusy()) {
-                    Servo_kan(0.12);
-                    Thread.sleep(500);
-                    Servo_kan(0.025);
-                    Thread.sleep(800);
-                    neep.setPosition(1);
-                    Thread.sleep(200);
-                    Servo_kan(0.12);
-                    Thread.sleep(200);
+                    downkeep();
                     setPathState(-8);
 
                 }
@@ -342,7 +333,7 @@ public class S5 extends OpMode {
     @Override
     public void start() {
         opmodeTimer.resetTimer();
-        setPathState(0);
+        setPathState(80);
         setMec(-1);
 
     }
@@ -359,7 +350,7 @@ public class S5 extends OpMode {
                 L1.setPower(0.6);
                 L2.setPower(0.6);
                 wrist.setPosition(0.8);
-                neep.setPosition(0.28);
+                neep.setPosition(0.2);
                 Servo_kan(0);
             } else {
                 L1.setPower(0.05);
@@ -374,8 +365,8 @@ public class S5 extends OpMode {
         Thread.sleep(500);
         while (true) {
             if (Math.abs(L2.getCurrentPosition()) >= 15) {
-                L1.setPower(-0.6);
-                L2.setPower(-0.6);
+                L1.setPower(-0.4);
+                L2.setPower(-0.4);
             } else {
                 L1.setPower(0);
                 L2.setPower(0);
@@ -386,7 +377,9 @@ public class S5 extends OpMode {
         }
         Thread.sleep(700);
         neep.setPosition(1);
-        Thread.sleep(1000);
+        Thread.sleep(500);
+        Servo_kan(0.15);
+        Thread.sleep(300);
         setPathState(-1);
     }
     private void upliftset(int up) {

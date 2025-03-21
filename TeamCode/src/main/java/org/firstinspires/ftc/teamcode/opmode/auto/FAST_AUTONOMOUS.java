@@ -1,14 +1,12 @@
 package org.firstinspires.ftc.teamcode.opmode.auto;
 
 
-
-
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import  com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.pedroPathing.follower.*;
+import org.firstinspires.ftc.teamcode.pedroPathing.follower.Follower;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.BezierCurve;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.BezierLine;
@@ -19,18 +17,8 @@ import org.firstinspires.ftc.teamcode.pedroPathing.util.Timer;
 
 //import org.firstinspires.ftc.teamcode.config.subsystem.ClawSubsystem;
 
-/**
- * This is an example auto that showcases movement and control of two servos autonomously.
- * It is a 0+4 (Specimen + Sample) bucket auto. It scores a neutral preload and then pickups 3 samples from the ground and scores them before parking.
- * There are examples of different ways to build paths.
- * A path progression method has been created and can advance based on time, position, or other factors.
- *
- * @author Baron Henderson - 20077 The Indubitables
- * @version 2.0, 11/28/2024
- */
-
-@Autonomous(name = "AutoSpecimen_Red")
-public class RED_AUTO_MUL extends OpMode {
+@Autonomous(name = "AutoSpecimen_BLU")
+public class FAST_AUTONOMOUS extends OpMode {
 
     private Follower follower;
     private Timer pathTimer, actionTimer, opmodeTimer;
@@ -64,8 +52,8 @@ public class RED_AUTO_MUL extends OpMode {
 
     /** Start Pose of our robot */
     private final Pose startPose = new Pose(0, 0, Math.toRadians(0));
-    private final Pose hang_Sp1 = new Pose(25, 2, Math.toRadians(0));
-    private final Pose Slide_Sp1 = new Pose(22, -25, Math.toRadians(0));
+    private final Pose hang_Sp1 = new Pose(28.8, 0, Math.toRadians(0));
+    private final Pose Slide_Sp1 = new Pose(24, -25, Math.toRadians(0));
     private final Pose pl_Sp1_FW = new Pose(50, -32, Math.toRadians(0));
     private final Pose pl_Sp1_Slide = new Pose(50, -39, Math.toRadians(0));
     private final Pose pl_Sp1_Back = new Pose(16, -39, Math.toRadians(0));
@@ -74,18 +62,19 @@ public class RED_AUTO_MUL extends OpMode {
     private final Pose pl_Sp2_Back = new Pose(16, -48, Math.toRadians(0));
     private final Pose pl_Sp3_FW = new Pose(50, -54, Math.toRadians(0));
     private final Pose pl_Sp3_Slide = new Pose(50, -57, Math.toRadians(0));
-    private final Pose human_Sp2 = new Pose(13, -57, Math.toRadians(0));
+    private final Pose human_Sp2 = new Pose(11.2, -57, Math.toRadians(0));
     private final Pose hang_Sp2 = new Pose(26, 0, Math.toRadians(0));
     private final Pose keep_Sp3 = new Pose(10.8, -30, Math.toRadians(0));
     private final Pose hang_Sp3 = new Pose(25, -2, Math.toRadians(0));
     private final Pose hang_Sp4 = new Pose(25, -5.5, Math.toRadians(0));
-    private final Pose hang_Sp5 = new Pose(25, -7, Math.toRadians(0));
+    private final Pose hang_Sp5 = new Pose(25, -8, Math.toRadians(0));
+    private final Pose hang_Sp5_back = new Pose(14, -2, Math.toRadians(0));
     private final Pose End = new Pose(11.8, -38, Math.toRadians(0));
 
 
 
     private Path hang_preload, park;
-    private PathChain Point1_hang, Point2_Sp2FW, Point3_Sp2Sl, Point4_Sp2Back,  Point5_Sp3FW, Point6_Sp3Sl,Point7_Sp3Ba,Point8_Sp4FW,Point9_Sp4Sl,Point10_Sp4keep,hangSp2,keepSp3,hangSp3,hangSp4,hangSp5,keepSp1,keepSp2,Finish;
+    private PathChain Point1_hang, Point2_Sp2FW, Point3_Sp2Sl, Point4_Sp2Back,  Point5_Sp3FW, Point6_Sp3Sl,Point7_Sp3Ba,Point8_Sp4FW,Point9_Sp4Sl,Point10_Sp4keep,hangSp2,keepSp3,hangSp3,hangSp4,hangSp5,keepSp1,keepSp2,Finish,hangSp5back;
 
     /** Build the paths for the auto (adds, for example, constant/linear headings while doing paths)
      * It is necessary to do this so that all the paths are built before the auto starts. **/
@@ -184,9 +173,14 @@ public class RED_AUTO_MUL extends OpMode {
                 .setLinearHeadingInterpolation(keep_Sp3.getHeading(), hang_Sp5.getHeading())
                 .build();
 
+        hangSp5back = follower.pathBuilder()
+                .addPath(new BezierLine(new Point(hang_Sp5), new Point(hang_Sp5_back)))
+                .setLinearHeadingInterpolation(hang_Sp5.getHeading(), hang_Sp5_back.getHeading())
+                .build();
+
         Finish = follower.pathBuilder()
-                .addPath(new BezierLine(new Point(hang_Sp5), new Point(End)))
-                .setLinearHeadingInterpolation(hang_Sp5.getHeading(), End.getHeading())
+                .addPath(new BezierCurve(new Point(hang_Sp5_back),new Point(End)))
+                .setLinearHeadingInterpolation(hang_Sp5_back.getHeading(), End.getHeading())
                 .build();
 
     }
@@ -197,11 +191,11 @@ public class RED_AUTO_MUL extends OpMode {
     public void autonomousPathUpdate() throws InterruptedException {
         switch (pathState) {
             case 0:
-                follower.setMaxPower(1);
-                follower.followPath(hang_preload);
+                setMec(0);
+                follower.setMaxPower(0.75);
+                follower.followPath(hang_preload , true);
                 neep.setPosition(1);
-                Servo_kan(0.44);
-                wrist.setPosition(0.72);
+                spin.setPosition(0);
                 setPathState(101);
 
 
@@ -209,39 +203,31 @@ public class RED_AUTO_MUL extends OpMode {
                 break;
             case 101:
                 if(follower.getPose().getX() > (hang_Sp1.getX() - 1) && follower.getPose().getY() > (hang_Sp1.getY() - 1)) {
-                    follower.followPath(hang_preload);
-                    neep.setPosition(1);
-                    Servo_kan(0.15);
-                    Thread.sleep(400);
+                    wrist.setPosition(1);
                     neep.setPosition(0);
+                    Thread.sleep(250);
                     setPathState(1);
                 }
                 break;
             case 1:
 
-                /* You could check for
-                - Follower State: "if(!follower.isBusy() {}" (Though, I don't recommend this because it might not return due to holdEnd
-                - Time: "if(pathTimer.getElapsedTimeSeconds() > 1) {}"
-                - Robot Position: "if(follower.getPose().getX() > 36) {}"
-                */
-
-                /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the scorePose's position */
                 if(follower.getPose().getX() > (hang_Sp1.getX() - 1) && follower.getPose().getY() > (hang_Sp1.getY() - 1)) {
-                    /* Score Preload */
-                    /* Since this is a pathChain, we can have Pedro hold the end point while we are grabbing the sample */
-
-                    wrist.setPosition(0.6);
+                    follower.setMaxPower(0.9);
                     Servo_kan(1);
-                    Thread.sleep(100);
+                    Thread.sleep(250);
+                    L1.setPower(-0.7);
+                    L2.setPower(-0.7);
                     follower.followPath(Point1_hang,true);
                     setPathState(2);
 
                 }
                 break;
             case 2:
+
                 follower.setMaxPower(1);
                 if(follower.getPose().getX() < (Slide_Sp1.getX() + 1) && Math.abs(follower.getPose().getY()) > Math.abs(Slide_Sp1.getY()) - 1) {
-
+                    L1.setPower(0);
+                    L2.setPower(0);
                     follower.followPath(Point2_Sp2FW,true);
                     setPathState(3);
 
@@ -250,7 +236,7 @@ public class RED_AUTO_MUL extends OpMode {
             case 3:
 
                 if(follower.getPose().getX() > (pl_Sp1_FW.getX() - 1) && Math.abs(follower.getPose().getY()) > Math.abs(pl_Sp1_FW.getY()) -1) {
-                    follower.setMaxPower(0.8);
+                    follower.setMaxPower(1);
                     /* Score Preload */
                     /* Since this is a pathChain, we can have Pedro hold the end point while we are grabbing the sample */
                     follower.followPath(Point3_Sp2Sl,true);
@@ -303,6 +289,8 @@ public class RED_AUTO_MUL extends OpMode {
 
                 if(follower.getPose().getX() < (pl_Sp2_Back.getX() + 1) && Math.abs(follower.getPose().getY()) > Math.abs(pl_Sp2_Back.getY()) - 1 ) {
                     follower.setMaxPower(1);
+                    spin.setPosition(0);
+                    wrist.setPosition(0.48);
                     follower.followPath(Point8_Sp4FW,true);
 
                     setPathState(9);
@@ -321,7 +309,8 @@ public class RED_AUTO_MUL extends OpMode {
                 break;
             case 10:
                 if(follower.getPose().getX() < (pl_Sp3_Slide.getX() + 1) && Math.abs(follower.getPose().getY()) > Math.abs(pl_Sp3_Slide.getY()) - 1) {
-                    follower.setMaxPower(1);
+                    follower.setMaxPower(0.8);
+                    spin.setPosition(0);
                     follower.followPath(Point10_Sp4keep,true);
 
                     setPathState(102);
@@ -334,7 +323,7 @@ public class RED_AUTO_MUL extends OpMode {
                     neep.setPosition(1);
                     Thread.sleep(200);
                     Servo_kan(0.44);
-                    wrist.setPosition(0.7);
+                    wrist.setPosition(0.66);
                     spin.setPosition(1);
                     setPathState(11);
                 }
@@ -351,7 +340,7 @@ public class RED_AUTO_MUL extends OpMode {
                 if(!follower.isBusy()) {
                     neep.setPosition(1);
                     Servo_kan(0.16);
-                    Thread.sleep(400);
+                    Thread.sleep(500);
                     neep.setPosition(0);
                     setPathState(12);
                 }
@@ -359,9 +348,9 @@ public class RED_AUTO_MUL extends OpMode {
             case 12:
                 if(follower.getPose().getX() > (hang_Sp2.getX() - 1) && Math.abs(follower.getPose().getY()) < Math.abs(hang_Sp2.getY()) + 1) {
                     follower.setMaxPower(1);
-                    wrist.setPosition(0.55);
+                    wrist.setPosition(0.48);
                     Servo_kan(1);
-                    Thread.sleep(200);
+                    Thread.sleep(190);
                     spin.setPosition(0);
                     follower.followPath(keepSp3,true);
                     setPathState(104);
@@ -372,7 +361,7 @@ public class RED_AUTO_MUL extends OpMode {
                     neep.setPosition(1);
                     Thread.sleep(200);
                     Servo_kan(0.44);
-                    wrist.setPosition(0.7);
+                    wrist.setPosition(0.66);
                     spin.setPosition(1);
                     setPathState(13);
                 }
@@ -388,7 +377,7 @@ public class RED_AUTO_MUL extends OpMode {
                 if(!follower.isBusy())  {
                     neep.setPosition(1);
                     Servo_kan(0.16);
-                    Thread.sleep(400);
+                    Thread.sleep(500);
                     neep.setPosition(0);
                     setPathState(14);
                 }
@@ -396,7 +385,7 @@ public class RED_AUTO_MUL extends OpMode {
             case 14:
                 if(follower.getPose().getX() > (hang_Sp3.getX() - 1) && Math.abs(follower.getPose().getY()) < Math.abs(hang_Sp3.getY()) + 1)  {
                     follower.setMaxPower(1);
-                    wrist.setPosition(0.55);
+                    wrist.setPosition(0.48);
                     Servo_kan(1);
                     Thread.sleep(200);
                     spin.setPosition(0);
@@ -410,7 +399,7 @@ public class RED_AUTO_MUL extends OpMode {
                     neep.setPosition(1);
                     Thread.sleep(200);
                     Servo_kan(0.44);
-                    wrist.setPosition(0.7);
+                    wrist.setPosition(0.66);
                     spin.setPosition(1);
                     setPathState(15);
                 }
@@ -426,7 +415,7 @@ public class RED_AUTO_MUL extends OpMode {
                 if(!follower.isBusy())   {
                     neep.setPosition(1);
                     Servo_kan(0.16);
-                    Thread.sleep(400);
+                    Thread.sleep(500);
                     neep.setPosition(0);
                     setPathState(16);
                 }
@@ -435,9 +424,9 @@ public class RED_AUTO_MUL extends OpMode {
             case 16:
                 if(follower.getPose().getX() > (hang_Sp4.getX() - 1) && Math.abs(follower.getPose().getY()) < Math.abs(hang_Sp4.getY()) + 1)  {
                     follower.setMaxPower(1);
-                    wrist.setPosition(0.55);
+                    wrist.setPosition(0.48);
                     Servo_kan(1);
-                    Thread.sleep(110);
+                    Thread.sleep(200);
                     spin.setPosition(0);
                     follower.followPath(keepSp2,true);
                     setPathState(109);
@@ -449,7 +438,7 @@ public class RED_AUTO_MUL extends OpMode {
                     neep.setPosition(1);
                     Thread.sleep(200);
                     Servo_kan(0.44);
-                    wrist.setPosition(0.7);
+                    wrist.setPosition(0.62);
                     spin.setPosition(1);
                     setPathState(17);
                 }
@@ -464,23 +453,25 @@ public class RED_AUTO_MUL extends OpMode {
             case 110:
                 if(!follower.isBusy()) {
                     Servo_kan(0.15);
-                    Thread.sleep(400);
+                    Thread.sleep(500);
                     neep.setPosition(0);
                     setPathState(18);
                 }
                 break;
             case 18:
                 if(follower.getPose().getX() > (hang_Sp5.getX() - 1) && Math.abs(follower.getPose().getY()) < Math.abs(hang_Sp5.getY()) + 1)  {
-                    wrist.setPosition(0.6);
+                    wrist.setPosition(0.48);
                     Servo_kan(1);
-                    spin.setPosition(0);
                     Thread.sleep(200);
+                    spin.setPosition(0);
+                    follower.followPath(hangSp5back,false);
                     setPathState(19);
                 }
                 break;
             case 19:
                 if(!follower.isBusy()) {
                     follower.setMaxPower(1);
+                    Thread.sleep(800);
                     follower.followPath(Finish,true);
                     setPathState(-1);
                 }
@@ -490,23 +481,11 @@ public class RED_AUTO_MUL extends OpMode {
     public void mecpath() throws InterruptedException{
         switch (mec) {
             case 0:
-                uplifthang(400);
+                uplifthang(680);
+                break;
             case 1:
                 uplifthang(350);
-            case 2:
-                L1.setPower(-0.45);
-                L2.setPower(-0.45);
-                Thread.sleep(450);
-                L1.setPower(0);
-                L2.setPower(0);
-                setMec(-1);
-            case 3:
-                L1.setPower(0.9);
-                L2.setPower(0.9);
-                Thread.sleep(250);
-                L1.setPower(0);
-                L2.setPower(0);
-                setMec(-1);
+                break;
 
         }}
     /** These change the states of the paths and actions
@@ -529,7 +508,7 @@ public class RED_AUTO_MUL extends OpMode {
 
         try {
             autonomousPathUpdate();
-//            mecpath();
+            mecpath();
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -566,15 +545,10 @@ public class RED_AUTO_MUL extends OpMode {
         wrist.setDirection(Servo.Direction.REVERSE);
         L1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         L2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        L2.setDirection(DcMotor.Direction.REVERSE);
+        L1.setDirection(DcMotor.Direction.REVERSE);
         L1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         L2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-//        claw = new ClawSubsystem(hardwareMap);
-//
-//        // Set the claw to positions for init
-//        claw.closeClaw();
-//        claw.startClaw();
     }
 
     /** This method is called continuously after Init while waiting for "play". **/
@@ -594,18 +568,21 @@ public class RED_AUTO_MUL extends OpMode {
         leftservo.setPosition(1 - right);
     }
 
+
     private void uplifthang(int up) {
 
-        if ((L1.getCurrentPosition() + L2.getCurrentPosition()) / 2 <= up) {
-            L1.setPower(0.95);
-            L2.setPower(0.95);
-            Servo_kan(0.4);
+        if (L2.getCurrentPosition() < up) {
+            L1.setPower(1);
+            L2.setPower(1);
+            Servo_kan(0.28);
+            spin.setPosition(0);
+            neep.setPosition(1);
             wrist.setPosition(1);
 
-        } else if ((L1.getCurrentPosition() + L2.getCurrentPosition()) / 2 > up) {
+        } else {
 
-            L1.setPower(0);
-            L2.setPower(0);
+            L1.setPower(0.08);
+            L2.setPower(0.08);
             L1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             L2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             setMec(-1);
