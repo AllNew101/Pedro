@@ -52,7 +52,7 @@ public class FAST_AUTONOMOUS extends OpMode {
 
     /** Start Pose of our robot */
     private final Pose startPose = new Pose(0, 0, Math.toRadians(0));
-    private final Pose hang_Sp1 = new Pose(28.8, 0, Math.toRadians(0));
+    private final Pose hang_Sp1 = new Pose(27.5, 0, Math.toRadians(0));
     private final Pose Slide_Sp1 = new Pose(24, -25, Math.toRadians(0));
     private final Pose pl_Sp1_FW = new Pose(50, -32, Math.toRadians(0));
     private final Pose pl_Sp1_Slide = new Pose(50, -39, Math.toRadians(0));
@@ -65,10 +65,10 @@ public class FAST_AUTONOMOUS extends OpMode {
     private final Pose human_Sp2 = new Pose(11.2, -57, Math.toRadians(0));
     private final Pose hang_Sp2 = new Pose(26, 0, Math.toRadians(0));
     private final Pose keep_Sp3 = new Pose(10.8, -30, Math.toRadians(0));
-    private final Pose hang_Sp3 = new Pose(25, -2, Math.toRadians(0));
-    private final Pose hang_Sp4 = new Pose(25, -5.5, Math.toRadians(0));
-    private final Pose hang_Sp5 = new Pose(25, -8, Math.toRadians(0));
-    private final Pose hang_Sp5_back = new Pose(14, -2, Math.toRadians(0));
+    private final Pose hang_Sp3 = new Pose(25, -1, Math.toRadians(0));
+    private final Pose hang_Sp4 = new Pose(25, -2.5, Math.toRadians(0));
+    private final Pose hang_Sp5 = new Pose(25, -4, Math.toRadians(0));
+    private final Pose hang_Sp_back = new Pose(14, -2, Math.toRadians(0));
     private final Pose End = new Pose(11.8, -38, Math.toRadians(0));
 
 
@@ -139,7 +139,7 @@ public class FAST_AUTONOMOUS extends OpMode {
                 .build();
 
         hangSp2 = follower.pathBuilder()
-                .addPath(new BezierLine(new Point(human_Sp2), new Point(hang_Sp2)))
+                .addPath(new BezierCurve(new Point(human_Sp2),new Point(hang_Sp_back) ,new Point(hang_Sp2)))
                 .setLinearHeadingInterpolation(human_Sp2.getHeading(), hang_Sp2.getHeading())
                 .build();
 
@@ -149,7 +149,7 @@ public class FAST_AUTONOMOUS extends OpMode {
                 .build();
 
         hangSp3 = follower.pathBuilder()
-                .addPath(new BezierLine(new Point(keep_Sp3), new Point(hang_Sp3)))
+                .addPath(new BezierCurve(new Point(keep_Sp3),new Point(hang_Sp_back), new Point(hang_Sp3)))
                 .setLinearHeadingInterpolation(keep_Sp3.getHeading(), hang_Sp3.getHeading())
                 .build();
 
@@ -159,7 +159,7 @@ public class FAST_AUTONOMOUS extends OpMode {
                 .build();
 
         hangSp4 = follower.pathBuilder()
-                .addPath(new BezierLine(new Point(keep_Sp3), new Point(hang_Sp4)))
+                .addPath(new BezierCurve(new Point(keep_Sp3),new Point(hang_Sp_back), new Point(hang_Sp4)))
                 .setLinearHeadingInterpolation(keep_Sp3.getHeading(), hang_Sp4.getHeading())
                 .build();
 
@@ -169,18 +169,14 @@ public class FAST_AUTONOMOUS extends OpMode {
                 .build();
 
         hangSp5 = follower.pathBuilder()
-                .addPath(new BezierLine(new Point(keep_Sp3), new Point(hang_Sp5)))
+                .addPath(new BezierCurve(new Point(keep_Sp3),new Point(hang_Sp_back), new Point(hang_Sp5)))
                 .setLinearHeadingInterpolation(keep_Sp3.getHeading(), hang_Sp5.getHeading())
                 .build();
 
-        hangSp5back = follower.pathBuilder()
-                .addPath(new BezierLine(new Point(hang_Sp5), new Point(hang_Sp5_back)))
-                .setLinearHeadingInterpolation(hang_Sp5.getHeading(), hang_Sp5_back.getHeading())
-                .build();
 
         Finish = follower.pathBuilder()
-                .addPath(new BezierCurve(new Point(hang_Sp5_back),new Point(End)))
-                .setLinearHeadingInterpolation(hang_Sp5_back.getHeading(), End.getHeading())
+                .addPath(new BezierCurve(new Point(hang_Sp5),new Point(End)))
+                .setLinearHeadingInterpolation(hang_Sp5.getHeading(), End.getHeading())
                 .build();
 
     }
@@ -322,9 +318,9 @@ public class FAST_AUTONOMOUS extends OpMode {
                 if(!follower.isBusy()) {
                     neep.setPosition(1);
                     Thread.sleep(200);
-                    Servo_kan(0.44);
-                    wrist.setPosition(0.66);
-                    spin.setPosition(1);
+                    setMec(0);
+                    neep.setPosition(1);
+                    spin.setPosition(0);
                     setPathState(11);
                 }
                 break;
@@ -338,10 +334,14 @@ public class FAST_AUTONOMOUS extends OpMode {
                 break;
             case 103:
                 if(!follower.isBusy()) {
-                    neep.setPosition(1);
-                    Servo_kan(0.16);
-                    Thread.sleep(500);
+                    wrist.setPosition(1);
+                    spin.setPosition(0);
                     neep.setPosition(0);
+                    Thread.sleep(200);
+                    Servo_kan(1);
+                    Thread.sleep(150);
+                    L1.setPower(-1);
+                    L2.setPower(-1);
                     setPathState(12);
                 }
                 break;
@@ -350,19 +350,19 @@ public class FAST_AUTONOMOUS extends OpMode {
                     follower.setMaxPower(1);
                     wrist.setPosition(0.48);
                     Servo_kan(1);
-                    Thread.sleep(190);
-                    spin.setPosition(0);
                     follower.followPath(keepSp3,true);
                     setPathState(104);
                 }
                 break;
             case 104:
                 if(!follower.isBusy()) {
+                    L1.setPower(0);
+                    L2.setPower(0);
                     neep.setPosition(1);
                     Thread.sleep(200);
-                    Servo_kan(0.44);
-                    wrist.setPosition(0.66);
-                    spin.setPosition(1);
+                    setMec(0);
+                    neep.setPosition(1);
+                    spin.setPosition(0);
                     setPathState(13);
                 }
                 break;
@@ -375,10 +375,14 @@ public class FAST_AUTONOMOUS extends OpMode {
                 break;
             case 105:
                 if(!follower.isBusy())  {
-                    neep.setPosition(1);
-                    Servo_kan(0.16);
-                    Thread.sleep(500);
+                    wrist.setPosition(1);
+                    spin.setPosition(0);
                     neep.setPosition(0);
+                    Thread.sleep(200);
+                    Servo_kan(1);
+                    Thread.sleep(150);
+                    L1.setPower(-1);
+                    L2.setPower(-1);
                     setPathState(14);
                 }
                 break;
@@ -396,11 +400,13 @@ public class FAST_AUTONOMOUS extends OpMode {
 
             case 106:
                 if(!follower.isBusy()){
+                    L1.setPower(0);
+                    L2.setPower(0);
                     neep.setPosition(1);
                     Thread.sleep(200);
-                    Servo_kan(0.44);
-                    wrist.setPosition(0.66);
-                    spin.setPosition(1);
+                    setMec(0);
+                    neep.setPosition(1);
+                    spin.setPosition(0);
                     setPathState(15);
                 }
                 break;
@@ -413,10 +419,14 @@ public class FAST_AUTONOMOUS extends OpMode {
                 break;
             case 108:
                 if(!follower.isBusy())   {
-                    neep.setPosition(1);
-                    Servo_kan(0.16);
-                    Thread.sleep(500);
+                    wrist.setPosition(1);
+                    spin.setPosition(0);
                     neep.setPosition(0);
+                    Thread.sleep(200);
+                    Servo_kan(1);
+                    Thread.sleep(150);
+                    L1.setPower(-1);
+                    L2.setPower(-1);
                     setPathState(16);
                 }
                 break;
@@ -435,11 +445,13 @@ public class FAST_AUTONOMOUS extends OpMode {
 
             case 109:
                 if(!follower.isBusy()) {
+                    L1.setPower(0);
+                    L2.setPower(0);
                     neep.setPosition(1);
                     Thread.sleep(200);
-                    Servo_kan(0.44);
-                    wrist.setPosition(0.62);
-                    spin.setPosition(1);
+                    setMec(0);
+                    neep.setPosition(1);
+                    spin.setPosition(0);
                     setPathState(17);
                 }
                 break;
@@ -452,26 +464,33 @@ public class FAST_AUTONOMOUS extends OpMode {
                 break;
             case 110:
                 if(!follower.isBusy()) {
-                    Servo_kan(0.15);
-                    Thread.sleep(500);
+                    wrist.setPosition(1);
+                    spin.setPosition(0);
                     neep.setPosition(0);
+                    Thread.sleep(200);
+                    Servo_kan(1);
+                    Thread.sleep(150);
+                    L1.setPower(-1);
+                    L2.setPower(-1);
                     setPathState(18);
                 }
                 break;
             case 18:
                 if(follower.getPose().getX() > (hang_Sp5.getX() - 1) && Math.abs(follower.getPose().getY()) < Math.abs(hang_Sp5.getY()) + 1)  {
+
+                    L1.setPower(0);
+                    L2.setPower(0);
                     wrist.setPosition(0.48);
                     Servo_kan(1);
                     Thread.sleep(200);
                     spin.setPosition(0);
-                    follower.followPath(hangSp5back,false);
-                    setPathState(19);
+                    follower.followPath(Finish,false);
+                    setPathState(-1);
                 }
                 break;
             case 19:
                 if(!follower.isBusy()) {
                     follower.setMaxPower(1);
-                    Thread.sleep(800);
                     follower.followPath(Finish,true);
                     setPathState(-1);
                 }
@@ -481,7 +500,7 @@ public class FAST_AUTONOMOUS extends OpMode {
     public void mecpath() throws InterruptedException{
         switch (mec) {
             case 0:
-                uplifthang(680);
+                uplifthang(635);
                 break;
             case 1:
                 uplifthang(350);
