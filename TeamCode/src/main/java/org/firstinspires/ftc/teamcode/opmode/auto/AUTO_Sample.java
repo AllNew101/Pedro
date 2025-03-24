@@ -21,7 +21,6 @@ import org.firstinspires.ftc.vision.opencv.ColorRange;
 
 import java.util.List;
 
-//import org.firstinspires.ftc.teamcode.config.subsystem.ClawSubsystem;
 
 /**
  * This is an example auto that showcases movement and control of two servos autonomously.
