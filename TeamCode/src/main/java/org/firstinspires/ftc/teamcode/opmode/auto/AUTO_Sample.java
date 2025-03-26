@@ -57,7 +57,7 @@ public class AUTO_Sample extends OpMode {
 
     private final Pose startPose = new Pose(0, 0, Math.toRadians(0));
     private final Pose set_Sample = new Pose(-18, 4, Math.toRadians(45));
-    private final Pose keep_S2 = new Pose(-11, 11.8, Math.toRadians(90));
+    private final Pose keep_S2 = new Pose(-11, 12.5, Math.toRadians(90));
     private final Pose set_Sample2 = new Pose(-20, 8, Math.toRadians(62));
     private final Pose keep_S3 = new Pose(-20, 12.5, Math.toRadians(90));
     private final Pose set_Sample3 = new Pose(-22, 8, Math.toRadians(50));
@@ -212,7 +212,7 @@ public class AUTO_Sample extends OpMode {
             case 103:
                 if (!follower.isBusy()) {
                     neep.setPosition(0);
-                    Thread.sleep(850);
+                    Thread.sleep(750);
                     setPathState(1031);
                 }
                 break;
@@ -254,7 +254,7 @@ public class AUTO_Sample extends OpMode {
                 break;
             case 1041:
                 if (!follower.isBusy()) {
-                    Servo_kan(0.1);
+                    Servo_kan(0);
                     wrist.setPosition(1);
 
                     setPathState(7);
@@ -262,7 +262,7 @@ public class AUTO_Sample extends OpMode {
                 break;
             case 7:
                 if (!follower.isBusy()) {
-                    setMec(1);
+                    setMec(2);
                     follower.followPath(finale);
 
                     setPathState(777);
@@ -280,7 +280,6 @@ public class AUTO_Sample extends OpMode {
                     final0 = new Pose(follower.getPose().getX(), follower.getPose().getY(), Math.toRadians(0));
                     follower.setMaxPower(0.8);
 
-                    track_color.min_area = 2000;
                     if (count == 0){
                         keeper = track_color.track(true);
                         spin.setPosition(0);
@@ -342,17 +341,17 @@ public class AUTO_Sample extends OpMode {
                 break;
             case 202:
                 if (!follower.isBusy()) {
-                    Thread.sleep(200);
+                    Thread.sleep(150);
                     neep.setPosition(0);
                     Thread.sleep(300);
-                    Servo_kan(0.15);
+                    Servo_kan(0);
                     setPathState(9);
                 }
                 break;
             case 9:
                 if (!follower.isBusy()) {
                     follower.setMaxPower(0.8);
-                    Servo_kan(0.15);
+                    Servo_kan(0);
                     wrist.setPosition(1);
                     follower.followPath(keep6);
                     setMec(2);
@@ -369,7 +368,7 @@ public class AUTO_Sample extends OpMode {
                 downlift(15);
                 break;
             case 2:
-                downlift(300);
+                downlift(350);
                 break;
         }
     }
@@ -461,7 +460,7 @@ public class AUTO_Sample extends OpMode {
 
 
     private void upliftset(int up) {
-        wrist.setPosition(0.36);
+        wrist.setPosition(0.24);
         spin.setPosition(0);
         if (L2.getCurrentPosition() < up) {
             Servo_kan(0.4);

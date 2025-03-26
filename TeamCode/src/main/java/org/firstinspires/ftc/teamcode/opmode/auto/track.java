@@ -154,7 +154,7 @@ public class track extends OpMode {
                     else{
                         //Back
                         data_return.set(4,3);
-                        right_x = 0.76;
+                        right_x = 0.85;
                         right_y = 0.9;
                     }
                 }

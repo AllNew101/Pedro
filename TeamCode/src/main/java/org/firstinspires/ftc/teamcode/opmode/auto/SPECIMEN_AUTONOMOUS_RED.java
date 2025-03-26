@@ -69,12 +69,12 @@ public class SPECIMEN_AUTONOMOUS_RED extends OpMode {
     private final Pose hang_Sp4 = new Pose(25.5, -1, Math.toRadians(0));
     private final Pose hang_Sp5 = new Pose(25.5, -2.5, Math.toRadians(0));
     private final Pose hang_Sp_back = new Pose(14, -2, Math.toRadians(0));
-    private final Pose End = new Pose(11.8, -38, Math.toRadians(0));
+    private final Pose End = new Pose(15, 30, Math.toRadians(-80));
 
 
 
     private Path hang_preload, park;
-    private PathChain Point1_hang, Point2_Sp2FW, Point3_Sp2Sl, Point4_Sp2Back,  Point5_Sp3FW, Point6_Sp3Sl,Point7_Sp3Ba,Point8_Sp4FW,Point9_Sp4Sl,Point10_Sp4keep,hangSp2,keepSp3,hangSp3,hangSp4,hangSp5,keepSp1,keepSp2,Finish,hangSp5back;
+    private PathChain Point1_hang, Point2_Sp2FW, Point3_Sp2Sl, Point4_Sp2Back,  Point5_Sp3FW, Point6_Sp3Sl,Point7_Sp3Ba,Point8_Sp4FW,Point9_Sp4Sl,Point10_Sp4keep,hangSp2,keepSp3,hangSp3,hangSp4,hangSp5,keepSp1,keepSp2,Finish,hangSp5back,keep_sample;
 
     /** Build the paths for the auto (adds, for example, constant/linear headings while doing paths)
      * It is necessary to do this so that all the paths are built before the auto starts. **/
@@ -173,10 +173,14 @@ public class SPECIMEN_AUTONOMOUS_RED extends OpMode {
                 .setLinearHeadingInterpolation(keep_Sp3.getHeading(), hang_Sp5.getHeading())
                 .build();
 
+        keep_sample = follower.pathBuilder()
+                .addPath(new BezierCurve(new Point(hang_Sp5),new Point(keep_Sp3)))
+                .setLinearHeadingInterpolation(hang_Sp5.getHeading(), keep_Sp3.getHeading())
+                .build();
 
         Finish = follower.pathBuilder()
-                .addPath(new BezierCurve(new Point(hang_Sp5),new Point(End)))
-                .setLinearHeadingInterpolation(hang_Sp5.getHeading(), End.getHeading())
+                .addPath(new BezierCurve(new Point(keep_Sp3),new Point(End)))
+                .setLinearHeadingInterpolation(keep_Sp3.getHeading(), End.getHeading())
                 .build();
 
     }
@@ -335,41 +339,35 @@ public class SPECIMEN_AUTONOMOUS_RED extends OpMode {
                     wrist.setPosition(1);
                     spin.setPosition(0);
                     neep.setPosition(0);
-                    Thread.sleep(200);
-                    Servo_kan(1);
-                    Thread.sleep(150);
-                    setMec(2);
+                    Thread.sleep(100);
                     setPathState(12);
                 }
                 break;
             case 12:
                 if(follower.getPose().getX() > (hang_Sp2.getX() - 1) && Math.abs(follower.getPose().getY()) < Math.abs(hang_Sp2.getY()) + 1) {
                     follower.setMaxPower(1);
-                    wrist.setPosition(0.28);
-                    Servo_kan(1);
                     follower.followPath(keepSp3,true);
+                    Servo_kan(1);
+                    Thread.sleep(150);
+                    setMec(2);
+                    wrist.setPosition(0.28);
                     setPathState(104);
                 }
                 break;
             case 104:
                 if(!follower.isBusy()) {
-//                    neep.setPosition(1);
-//                    Thread.sleep(250);
-//                    setMec(0);
-//                    neep.setPosition(1);
-//                    spin.setPosition(0);
+                    neep.setPosition(1);
+                    Thread.sleep(250);
+                    setMec(0);
+                    neep.setPosition(1);
+                    spin.setPosition(0);
                     setPathState(13);
                 }
                 break;
             case 13:
                 if((follower.getPose().getX() < (keep_Sp3.getX() + 1) && Math.abs(follower.getPose().getY()) > Math.abs(keep_Sp3.getY()) - 1)) {
-                    neep.setPosition(1);
-                    Thread.sleep(50);
                     follower.setMaxPower(1);
                     follower.followPath(hangSp3,true);
-                    setMec(0);
-                    neep.setPosition(1);
-                    spin.setPosition(0);
                     setPathState(105);
                 }
                 break;
@@ -470,38 +468,34 @@ public class SPECIMEN_AUTONOMOUS_RED extends OpMode {
                 break;
             case 18:
                 if(follower.getPose().getX() > (hang_Sp5.getX() - 1) && Math.abs(follower.getPose().getY()) < Math.abs(hang_Sp5.getY()) + 1)  {
-
-
-                    wrist.setPosition(0.28);
+                    wrist.setPosition(1);
                     Servo_kan(1);
                     Thread.sleep(200);
                     spin.setPosition(0);
-                    follower.followPath(Finish,false);
-                    setPathState(-1);
+                    follower.followPath(keep_sample,true);
+                    setPathState(111);
                 }
                 break;
-            case 19:
-                if(!follower.isBusy()) {
 
-                    follower.setMaxPower(1);
-                    follower.followPath(Finish,true);
-                    setPathState(-1);
-                }
-                break;
         }
     }
     public void mecpath() throws InterruptedException{
         switch (mec) {
             case 0:
-                uplifthang(620);
+                uplifthang(630);
                 break;
             case 1:
                 uplifthang(350);
                 break;
             case 2:
                 downlift();
+                break;
+            case 3:
+                upliftset(1450);
+                break;
 
-        }}
+        }
+    }
     /** These change the states of the paths and actions
      * It will also reset the timers of the individual switches **/
     public void setPathState(int pState) {
@@ -607,6 +601,22 @@ public class SPECIMEN_AUTONOMOUS_RED extends OpMode {
 
 
 
+    }
+    private void upliftset(int up) {
+        wrist.setPosition(0.36);
+        spin.setPosition(0);
+        if (L2.getCurrentPosition() < up) {
+            Servo_kan(0.4);
+            L1.setPower(1);
+            L2.setPower(1);
+        } else {
+            Servo_kan(0.51);
+            L1.setPower(0.05);
+            L2.setPower(0.05);
+            L1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            L2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            setMec(-1);
+        }
     }
     private void downlift(){
         if (Math.abs(L2.getCurrentPosition()) >= 15) {
