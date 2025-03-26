@@ -17,8 +17,8 @@ import org.firstinspires.ftc.teamcode.pedroPathing.util.Timer;
 
 //import org.firstinspires.ftc.teamcode.config.subsystem.ClawSubsystem;
 
-@Autonomous(name = "AutoSpecimen_BLU")
-public class FAST_AUTONOMOUS extends OpMode {
+@Autonomous(name = "AutoSpecimen_RED")
+public class SPECIMEN_AUTONOMOUS_RED extends OpMode {
 
     private Follower follower;
     private Timer pathTimer, actionTimer, opmodeTimer;
@@ -34,7 +34,7 @@ public class FAST_AUTONOMOUS extends OpMode {
     private Servo wrist;
     private DcMotor L2 ;
     private DcMotor L1 ;
-
+    private Servo OPEN;
 
 
     /** This is our claw subsystem.
@@ -52,7 +52,7 @@ public class FAST_AUTONOMOUS extends OpMode {
 
     /** Start Pose of our robot */
     private final Pose startPose = new Pose(0, 0, Math.toRadians(0));
-    private final Pose hang_Sp1 = new Pose(27.5, 0, Math.toRadians(0));
+    private final Pose hang_Sp1 = new Pose(26.5, 0, Math.toRadians(0));
     private final Pose Slide_Sp1 = new Pose(24, -25, Math.toRadians(0));
     private final Pose pl_Sp1_FW = new Pose(50, -32, Math.toRadians(0));
     private final Pose pl_Sp1_Slide = new Pose(50, -39, Math.toRadians(0));
@@ -62,12 +62,12 @@ public class FAST_AUTONOMOUS extends OpMode {
     private final Pose pl_Sp2_Back = new Pose(16, -48, Math.toRadians(0));
     private final Pose pl_Sp3_FW = new Pose(50, -54, Math.toRadians(0));
     private final Pose pl_Sp3_Slide = new Pose(50, -57, Math.toRadians(0));
-    private final Pose human_Sp2 = new Pose(11.2, -57, Math.toRadians(0));
-    private final Pose hang_Sp2 = new Pose(26, 0, Math.toRadians(0));
+    private final Pose human_Sp2 = new Pose(12, -57, Math.toRadians(0));
+    private final Pose hang_Sp2 = new Pose(25.5, 2, Math.toRadians(0));
     private final Pose keep_Sp3 = new Pose(10.8, -30, Math.toRadians(0));
-    private final Pose hang_Sp3 = new Pose(25, -1, Math.toRadians(0));
-    private final Pose hang_Sp4 = new Pose(25, -2.5, Math.toRadians(0));
-    private final Pose hang_Sp5 = new Pose(25, -4, Math.toRadians(0));
+    private final Pose hang_Sp3 = new Pose(25.5, 1, Math.toRadians(0));
+    private final Pose hang_Sp4 = new Pose(25.5, -1, Math.toRadians(0));
+    private final Pose hang_Sp5 = new Pose(25.5, -2.5, Math.toRadians(0));
     private final Pose hang_Sp_back = new Pose(14, -2, Math.toRadians(0));
     private final Pose End = new Pose(11.8, -38, Math.toRadians(0));
 
@@ -187,8 +187,9 @@ public class FAST_AUTONOMOUS extends OpMode {
     public void autonomousPathUpdate() throws InterruptedException {
         switch (pathState) {
             case 0:
+
                 setMec(0);
-                follower.setMaxPower(0.75);
+                follower.setMaxPower(0.7);
                 follower.followPath(hang_preload , true);
                 neep.setPosition(1);
                 spin.setPosition(0);
@@ -211,8 +212,7 @@ public class FAST_AUTONOMOUS extends OpMode {
                     follower.setMaxPower(0.9);
                     Servo_kan(1);
                     Thread.sleep(250);
-                    L1.setPower(-0.7);
-                    L2.setPower(-0.7);
+                    setMec(2);
                     follower.followPath(Point1_hang,true);
                     setPathState(2);
 
@@ -222,8 +222,6 @@ public class FAST_AUTONOMOUS extends OpMode {
 
                 follower.setMaxPower(1);
                 if(follower.getPose().getX() < (Slide_Sp1.getX() + 1) && Math.abs(follower.getPose().getY()) > Math.abs(Slide_Sp1.getY()) - 1) {
-                    L1.setPower(0);
-                    L2.setPower(0);
                     follower.followPath(Point2_Sp2FW,true);
                     setPathState(3);
 
@@ -286,7 +284,7 @@ public class FAST_AUTONOMOUS extends OpMode {
                 if(follower.getPose().getX() < (pl_Sp2_Back.getX() + 1) && Math.abs(follower.getPose().getY()) > Math.abs(pl_Sp2_Back.getY()) - 1 ) {
                     follower.setMaxPower(1);
                     spin.setPosition(0);
-                    wrist.setPosition(0.48);
+                    wrist.setPosition(0.28);
                     follower.followPath(Point8_Sp4FW,true);
 
                     setPathState(9);
@@ -305,7 +303,7 @@ public class FAST_AUTONOMOUS extends OpMode {
                 break;
             case 10:
                 if(follower.getPose().getX() < (pl_Sp3_Slide.getX() + 1) && Math.abs(follower.getPose().getY()) > Math.abs(pl_Sp3_Slide.getY()) - 1) {
-                    follower.setMaxPower(0.8);
+                    follower.setMaxPower(0.65);
                     spin.setPosition(0);
                     follower.followPath(Point10_Sp4keep,true);
 
@@ -317,7 +315,7 @@ public class FAST_AUTONOMOUS extends OpMode {
             case 102:
                 if(!follower.isBusy()) {
                     neep.setPosition(1);
-                    Thread.sleep(200);
+                    Thread.sleep(250);
                     setMec(0);
                     neep.setPosition(1);
                     spin.setPosition(0);
@@ -326,7 +324,7 @@ public class FAST_AUTONOMOUS extends OpMode {
                 break;
 
             case 11:
-                if (follower.getPose().getX() < (human_Sp2.getX() + 1) && Math.abs(follower.getPose().getY()) > Math.abs(human_Sp2.getY()) - 1) {
+                if (follower.getPose().getX() < (human_Sp2.getX() + 0.1) && Math.abs(follower.getPose().getY()) > Math.abs(human_Sp2.getY()) - 0.1) {
                     follower.setMaxPower(1);
                     follower.followPath(hangSp2,true);
                     setPathState(103);
@@ -340,15 +338,14 @@ public class FAST_AUTONOMOUS extends OpMode {
                     Thread.sleep(200);
                     Servo_kan(1);
                     Thread.sleep(150);
-                    L1.setPower(-1);
-                    L2.setPower(-1);
+                    setMec(2);
                     setPathState(12);
                 }
                 break;
             case 12:
                 if(follower.getPose().getX() > (hang_Sp2.getX() - 1) && Math.abs(follower.getPose().getY()) < Math.abs(hang_Sp2.getY()) + 1) {
                     follower.setMaxPower(1);
-                    wrist.setPosition(0.48);
+                    wrist.setPosition(0.28);
                     Servo_kan(1);
                     follower.followPath(keepSp3,true);
                     setPathState(104);
@@ -356,20 +353,23 @@ public class FAST_AUTONOMOUS extends OpMode {
                 break;
             case 104:
                 if(!follower.isBusy()) {
-                    L1.setPower(0);
-                    L2.setPower(0);
-                    neep.setPosition(1);
-                    Thread.sleep(200);
-                    setMec(0);
-                    neep.setPosition(1);
-                    spin.setPosition(0);
+//                    neep.setPosition(1);
+//                    Thread.sleep(250);
+//                    setMec(0);
+//                    neep.setPosition(1);
+//                    spin.setPosition(0);
                     setPathState(13);
                 }
                 break;
             case 13:
                 if((follower.getPose().getX() < (keep_Sp3.getX() + 1) && Math.abs(follower.getPose().getY()) > Math.abs(keep_Sp3.getY()) - 1)) {
+                    neep.setPosition(1);
+                    Thread.sleep(50);
                     follower.setMaxPower(1);
                     follower.followPath(hangSp3,true);
+                    setMec(0);
+                    neep.setPosition(1);
+                    spin.setPosition(0);
                     setPathState(105);
                 }
                 break;
@@ -381,15 +381,14 @@ public class FAST_AUTONOMOUS extends OpMode {
                     Thread.sleep(200);
                     Servo_kan(1);
                     Thread.sleep(150);
-                    L1.setPower(-1);
-                    L2.setPower(-1);
+                    setMec(2);
                     setPathState(14);
                 }
                 break;
             case 14:
                 if(follower.getPose().getX() > (hang_Sp3.getX() - 1) && Math.abs(follower.getPose().getY()) < Math.abs(hang_Sp3.getY()) + 1)  {
                     follower.setMaxPower(1);
-                    wrist.setPosition(0.48);
+                    wrist.setPosition(0.28);
                     Servo_kan(1);
                     Thread.sleep(200);
                     spin.setPosition(0);
@@ -400,10 +399,8 @@ public class FAST_AUTONOMOUS extends OpMode {
 
             case 106:
                 if(!follower.isBusy()){
-                    L1.setPower(0);
-                    L2.setPower(0);
                     neep.setPosition(1);
-                    Thread.sleep(200);
+                    Thread.sleep(250);
                     setMec(0);
                     neep.setPosition(1);
                     spin.setPosition(0);
@@ -425,8 +422,7 @@ public class FAST_AUTONOMOUS extends OpMode {
                     Thread.sleep(200);
                     Servo_kan(1);
                     Thread.sleep(150);
-                    L1.setPower(-1);
-                    L2.setPower(-1);
+                    setMec(2);
                     setPathState(16);
                 }
                 break;
@@ -434,7 +430,7 @@ public class FAST_AUTONOMOUS extends OpMode {
             case 16:
                 if(follower.getPose().getX() > (hang_Sp4.getX() - 1) && Math.abs(follower.getPose().getY()) < Math.abs(hang_Sp4.getY()) + 1)  {
                     follower.setMaxPower(1);
-                    wrist.setPosition(0.48);
+                    wrist.setPosition(0.28);
                     Servo_kan(1);
                     Thread.sleep(200);
                     spin.setPosition(0);
@@ -445,10 +441,8 @@ public class FAST_AUTONOMOUS extends OpMode {
 
             case 109:
                 if(!follower.isBusy()) {
-                    L1.setPower(0);
-                    L2.setPower(0);
                     neep.setPosition(1);
-                    Thread.sleep(200);
+                    Thread.sleep(250);
                     setMec(0);
                     neep.setPosition(1);
                     spin.setPosition(0);
@@ -470,8 +464,7 @@ public class FAST_AUTONOMOUS extends OpMode {
                     Thread.sleep(200);
                     Servo_kan(1);
                     Thread.sleep(150);
-                    L1.setPower(-1);
-                    L2.setPower(-1);
+                    setMec(2);
                     setPathState(18);
                 }
                 break;
@@ -479,7 +472,7 @@ public class FAST_AUTONOMOUS extends OpMode {
                 if(follower.getPose().getX() > (hang_Sp5.getX() - 1) && Math.abs(follower.getPose().getY()) < Math.abs(hang_Sp5.getY()) + 1)  {
 
 
-                    wrist.setPosition(0.48);
+                    wrist.setPosition(0.28);
                     Servo_kan(1);
                     Thread.sleep(200);
                     spin.setPosition(0);
@@ -489,8 +482,7 @@ public class FAST_AUTONOMOUS extends OpMode {
                 break;
             case 19:
                 if(!follower.isBusy()) {
-                    L1.setPower(0);
-                    L2.setPower(0);
+
                     follower.setMaxPower(1);
                     follower.followPath(Finish,true);
                     setPathState(-1);
@@ -501,11 +493,13 @@ public class FAST_AUTONOMOUS extends OpMode {
     public void mecpath() throws InterruptedException{
         switch (mec) {
             case 0:
-                uplifthang(635);
+                uplifthang(620);
                 break;
             case 1:
                 uplifthang(350);
                 break;
+            case 2:
+                downlift();
 
         }}
     /** These change the states of the paths and actions
@@ -562,13 +556,14 @@ public class FAST_AUTONOMOUS extends OpMode {
         spin = hardwareMap.get(Servo.class, "spin");
         L1 = hardwareMap.get(DcMotor.class, "L1");
         L2 = hardwareMap.get(DcMotor.class, "L2");
+        OPEN = hardwareMap.get(Servo.class, "OPEN");
         wrist.setDirection(Servo.Direction.REVERSE);
         L1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         L2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         L1.setDirection(DcMotor.Direction.REVERSE);
         L1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         L2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
+        OPEN.setPosition(0);
     }
 
     /** This method is called continuously after Init while waiting for "play". **/
@@ -611,7 +606,23 @@ public class FAST_AUTONOMOUS extends OpMode {
 
 
 
+
     }
+    private void downlift(){
+        if (Math.abs(L2.getCurrentPosition()) >= 15) {
+            L1.setPower(-1);
+            L2.setPower(-1);
+        }
+        else {
+            L1.setPower(0);
+            L2.setPower(0);
+            L1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            L2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            setMec(-1);
+        }
+
+    }
+    /**
 
     /** We do not use this because everything should automatically disable **/
     @Override

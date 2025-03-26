@@ -168,13 +168,14 @@ public class S5 extends OpMode {
                     final0 = new Pose(follower.getPose().getX(), follower.getPose().getY(), Math.toRadians(0));
                     follower.setMaxPower(0.8);
 
-                    track_color.min_area = 3000;
                     Thread.sleep(300);
-                    keeper = track_color.track();
+                    keeper = track_color.track(false);
                     telemetry.addData("Read",keeper);
-                    telemetry.addData("Read",track_color.data_right);
                     if ((Integer) keeper.get(0) == 0){
                         spin.setPosition(0);
+                    }
+                    else if (((Integer) keeper.get(0) == 1)){
+                        spin.setPosition(0.5);
                     }
                     Thread.sleep(300);
                     if ((Integer) keeper.get(1) == 1){
@@ -291,6 +292,8 @@ public class S5 extends OpMode {
         telemetry.addData("heading", follower.getPose().getHeading());
         telemetry.addData("lift1",L1.getCurrentPosition());
         telemetry.addData("lift2",L2.getCurrentPosition());
+        telemetry.addData("Position",(Integer) keeper.get(4));
+        telemetry.update();
     }
 
     /** This method is called once at the init of the OpMode. **/

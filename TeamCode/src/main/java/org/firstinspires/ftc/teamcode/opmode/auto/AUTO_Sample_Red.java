@@ -1,15 +1,13 @@
 package org.firstinspires.ftc.teamcode.opmode.auto;
 
 
-
-
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import  com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.JavaUtil;
-import org.firstinspires.ftc.teamcode.pedroPathing.follower.*;
+import org.firstinspires.ftc.teamcode.pedroPathing.follower.Follower;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.BezierCurve;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.BezierLine;
@@ -32,8 +30,8 @@ import java.util.List;
  * @version 2.0, 11/28/2024
  */
 
-@Autonomous(name = "AutoSample_BLUE")
-public class AUTO_Sample extends OpMode {
+@Autonomous(name = "AutoSample_Red")
+public class AUTO_Sample_Red extends OpMode {
 
     private Follower follower;
     private Timer pathTimer, actionTimer, opmodeTimer;
@@ -42,6 +40,7 @@ public class AUTO_Sample extends OpMode {
      * It is used by the pathUpdate method. */
     private int pathState;
     private int mec;
+    private int count = 0;
     private Servo rightservo;
     private Servo leftservo;
     private Servo neep;
@@ -51,22 +50,21 @@ public class AUTO_Sample extends OpMode {
     private DcMotor L2 ;
     private DcMotor L1 ;
     private track track_color ;
-    private int count = 0;
     private List keeper = JavaUtil.createListWith();
 
 
     private final Pose startPose = new Pose(0, 0, Math.toRadians(0));
-    private final Pose set_Sample = new Pose(-18, 4, Math.toRadians(45));
+    private final Pose set_Sample = new Pose(-17, 4, Math.toRadians(45));
     private final Pose keep_S2 = new Pose(-11, 11.8, Math.toRadians(90));
-    private final Pose set_Sample2 = new Pose(-20, 8, Math.toRadians(62));
-    private final Pose keep_S3 = new Pose(-20, 12.5, Math.toRadians(90));
-    private final Pose set_Sample3 = new Pose(-22, 8, Math.toRadians(50));
+    private final Pose set_Sample2 = new Pose(-17.5, 9.5, Math.toRadians(60));
+    private final Pose keep_S3 = new Pose(-20, 11.5, Math.toRadians(90));
+    private final Pose set_Sample3 = new Pose(-21, 9, Math.toRadians(50));
     private final Pose keep_S4 = new Pose(-20.8, 13.5, Math.toRadians(112));
     private final Pose set_Sample4 = new Pose(-21.5, 10, Math.toRadians(55));
     private final Pose b_final = new Pose(-10, 55, Math.toRadians(55));
     private Pose final0 = new Pose(12.5,55.72,Math.toRadians(0));
     private Pose keep_S5 = new Pose(12.5,51.72,Math.toRadians(0));
-    private final Pose set_Sample5 = new Pose(-24, 8, Math.toRadians(45));
+    private final Pose set_Sample5 = new Pose(-23, 8, Math.toRadians(45));
     private  Pose final1 = new Pose(7.28,55.72,Math.toRadians(0));
 
 
@@ -189,7 +187,7 @@ public class AUTO_Sample extends OpMode {
                 }
                 break;
             case 3:
-                if (Math.abs(follower.getPose().getX()) > Math.abs((set_Sample2.getX())) - 0.25 && Math.abs(follower.getPose().getY()) < Math.abs(set_Sample2.getY()) + 0.25) {
+                if (!follower.isBusy()) {
                     follower.setMaxPower(0.5);
                     setMec(1);
                     follower.followPath(keepS3);
@@ -225,7 +223,7 @@ public class AUTO_Sample extends OpMode {
                 }
                 break;
             case 5:
-                if (Math.abs(follower.getPose().getX()) > Math.abs((set_Sample3.getX())) - 0.25 && Math.abs(follower.getPose().getY()) < Math.abs(set_Sample3.getY()) + 0.25) {
+                if (!follower.isBusy()) {
                     follower.setMaxPower(0.6);
                     setMec(1);
                     follower.followPath(keepS4);
@@ -262,7 +260,7 @@ public class AUTO_Sample extends OpMode {
                 break;
             case 7:
                 if (!follower.isBusy()) {
-                    setMec(1);
+                    setMec(2);
                     follower.followPath(finale);
 
                     setPathState(777);
@@ -287,13 +285,12 @@ public class AUTO_Sample extends OpMode {
 
                     }
                     else {
-                        keeper = track_color.track(true);
-                        spin.setPosition(0);
+                        keeper = track_color.track(false);
+                        spin.setPosition(0.5);
                         count = 0;
                     }
                     telemetry.addData("Read",keeper);
                     telemetry.addData("Position",(Integer) keeper.get(4));
-                    telemetry.update();
                     if ((Integer) keeper.get(1) == 1){
                         setPathState(802);
                     } else{
@@ -363,10 +360,10 @@ public class AUTO_Sample extends OpMode {
     public void mecpath() {
         switch (mec) {
             case 0:
-                upliftset(1520);
+                upliftset(1450);
                 break;
             case 1:
-                downlift(15);
+                downlift(20);
                 break;
             case 2:
                 downlift(300);
@@ -405,7 +402,7 @@ public class AUTO_Sample extends OpMode {
         telemetry.addData("heading", follower.getPose().getHeading());
         telemetry.addData("lift1",L1.getCurrentPosition());
         telemetry.addData("lift2",L2.getCurrentPosition());
-
+        telemetry.update();
     }
 
     /** This method is called once at the init of the OpMode. **/
@@ -495,7 +492,7 @@ public class AUTO_Sample extends OpMode {
     private void downkeep() throws InterruptedException{
         wrist.setPosition(1);
         while (true) {
-            if (Math.abs(L2.getCurrentPosition()) >= 15) {
+            if (Math.abs(L2.getCurrentPosition()) >= 20) {
                 L1.setPower(-0.4);
                 L2.setPower(-0.4);
             } else {
@@ -516,8 +513,8 @@ public class AUTO_Sample extends OpMode {
         if (Math.abs(L2.getCurrentPosition()) >= down) {
             L1.setPower(-1);
             L2.setPower(-1);
-        }
-        else {
+            }
+         else {
             L1.setPower(0);
             L2.setPower(0);
             L1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

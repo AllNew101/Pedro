@@ -38,12 +38,12 @@ public class track extends OpMode {
     ColorBlobLocatorProcessor.Blob myBlob;
     RotatedRect myBoxFit;
     org.opencv.core.Rect mySize;
-    boolean vertical = false;
+    boolean vertical = true;
     org.opencv.core.Point[] myPoints;
     public double max_area = 6000;
-    public double min_area = 1000;
-    public final double Perfect_X = 142;
-    public final double Perfect_Y = 199;
+    public double min_area = 4500;
+    public double Perfect_X = 142;
+    public double Perfect_Y = 199;
     public double ti_me = 100.0;
 
     public List data_right;
@@ -90,8 +90,9 @@ public class track extends OpMode {
     public void loop() {}
 
 
-    public List track(){
+    public List track(boolean check_verticle){
         data_right.removeAll(data_right);
+        data_return = Arrays.asList(0,0,0.0,0.0,0);
 
         time2 = System.currentTimeMillis();
         while ((System.currentTimeMillis() - time2) <= ti_me) {
@@ -107,7 +108,8 @@ public class track extends OpMode {
                 }
                 if (mySize.width / mySize.height > 1) {vertical = false;}
                 else if (mySize.width / mySize.height < 1){vertical = true;}
-                if (vertical){
+
+                if (check_verticle == vertical){
                     data_right.add(JavaUtil.createListWith(Math.round(Math.sqrt(Math.pow(Perfect_X - myBoxFit.center.x, 2) + Math.pow(Perfect_Y - myBoxFit.center.y, 2))), vertical, myBoxFit.center.x, myBoxFit.center.y));
                 }
 
@@ -130,30 +132,64 @@ public class track extends OpMode {
                    //right
                     if ((120.0 - ((Double) JavaUtil.inListGet((((List) JavaUtil.inListGet(data_right, JavaUtil.AtMode.FROM_START, (int) 0, false))), JavaUtil.AtMode.FROM_START, (int) 3, false)).doubleValue()) > 0){
                         //Front
-                        right_x = 1;
+                        data_return.set(4,0);
+                        right_x = 0.8;
                         right_y = 0.8;
                     }
                     else{
                         //Back
+                        data_return.set(4,1);
                         right_x = 1;
-                        right_y = 0.8;
+                        right_y = 1;
                     }
                 }
                 else{
                     //left
-
                     if ((120.0 - ((Double) JavaUtil.inListGet((((List) JavaUtil.inListGet(data_right, JavaUtil.AtMode.FROM_START, (int) 0, false))), JavaUtil.AtMode.FROM_START, (int) 3, false)).doubleValue()) > 0){
                         //Front
+                        data_return.set(4,2);
                         right_x = 0.8;
                         right_y = 0.9;
                     }
                     else{
                         //Back
+                        data_return.set(4,3);
                         right_x = 0.76;
                         right_y = 0.9;
                     }
                 }
+            }
+            else {
+                data_return.set(0, 1);
+                if ((160.0 - ((Double) JavaUtil.inListGet((((List) JavaUtil.inListGet(data_right, JavaUtil.AtMode.FROM_START, (int) 0, false))), JavaUtil.AtMode.FROM_START, (int) 2, false)).doubleValue()) > 0) {
+                    //right
+                    if ((120.0 - ((Double) JavaUtil.inListGet((((List) JavaUtil.inListGet(data_right, JavaUtil.AtMode.FROM_START, (int) 0, false))), JavaUtil.AtMode.FROM_START, (int) 3, false)).doubleValue()) > 0) {
+                        //Front
+                        data_return.set(4,5);
+                        right_x = 1;
+                        right_y = 0.8;
+                    } else {
+                        //Back
+                        data_return.set(4,6);
+                        right_x = 1;
+                        right_y = 1.2;
+                    }
+                } else {
+                    //left
+
+                    if ((120.0 - ((Double) JavaUtil.inListGet((((List) JavaUtil.inListGet(data_right, JavaUtil.AtMode.FROM_START, (int) 0, false))), JavaUtil.AtMode.FROM_START, (int) 3, false)).doubleValue()) > 0) {
+                        //Front
+                        data_return.set(4,7);
+                        right_x = 0.8;
+                        right_y = 0.9;
+                    } else {
+                        //Back
+                        data_return.set(4,8);
+                        right_x = 0.76;
+                        right_y = 0.9;
+                    }
                 }
+            }
 
             if ((Long)JavaUtil.inListGet((((List) JavaUtil.inListGet(data_right, JavaUtil.AtMode.FROM_START, (int) 0, false))), JavaUtil.AtMode.FROM_START, (int) 0, false) <= 20) {
                 data_return.set(1,1);
@@ -170,8 +206,6 @@ public class track extends OpMode {
         }
         data_return.set(2,adjust_x);
         data_return.set(3,adjust_y);
-
-
         return data_return ;
     }
 }
