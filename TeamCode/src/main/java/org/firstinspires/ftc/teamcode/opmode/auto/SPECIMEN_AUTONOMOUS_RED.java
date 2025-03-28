@@ -52,7 +52,7 @@ public class SPECIMEN_AUTONOMOUS_RED extends OpMode {
 
     /** Start Pose of our robot */
     private final Pose startPose = new Pose(0, 0, Math.toRadians(0));
-    private final Pose hang_Sp1 = new Pose(26.5, 0, Math.toRadians(0));
+    private final Pose hang_Sp1 = new Pose(26.8, 0, Math.toRadians(0));
     private final Pose Slide_Sp1 = new Pose(24, -25, Math.toRadians(0));
     private final Pose pl_Sp1_FW = new Pose(50, -32, Math.toRadians(0));
     private final Pose pl_Sp1_Slide = new Pose(50, -39, Math.toRadians(0));
@@ -63,13 +63,13 @@ public class SPECIMEN_AUTONOMOUS_RED extends OpMode {
     private final Pose pl_Sp3_FW = new Pose(50, -54, Math.toRadians(0));
     private final Pose pl_Sp3_Slide = new Pose(50, -57, Math.toRadians(0));
     private final Pose human_Sp2 = new Pose(12, -57, Math.toRadians(0));
-    private final Pose hang_Sp2 = new Pose(25.5, 2, Math.toRadians(0));
+    private final Pose hang_Sp2 = new Pose(25.5, 3.2, Math.toRadians(0));
     private final Pose keep_Sp3 = new Pose(10.8, -30, Math.toRadians(0));
-    private final Pose hang_Sp3 = new Pose(25.5, 1, Math.toRadians(0));
+    private final Pose hang_Sp3 = new Pose(25.5, 2, Math.toRadians(0));
     private final Pose hang_Sp4 = new Pose(25.5, -1, Math.toRadians(0));
-    private final Pose hang_Sp5 = new Pose(25.5, -2.5, Math.toRadians(0));
+    private final Pose hang_Sp5 = new Pose(25.8, -2.5, Math.toRadians(0));
     private final Pose hang_Sp_back = new Pose(14, -2, Math.toRadians(0));
-    private final Pose End = new Pose(15, 30, Math.toRadians(-80));
+    private final Pose End = new Pose(10.8, -30, Math.toRadians(-90));
 
 
 
@@ -174,8 +174,8 @@ public class SPECIMEN_AUTONOMOUS_RED extends OpMode {
                 .build();
 
         keep_sample = follower.pathBuilder()
-                .addPath(new BezierCurve(new Point(hang_Sp5),new Point(keep_Sp3)))
-                .setLinearHeadingInterpolation(hang_Sp5.getHeading(), keep_Sp3.getHeading())
+                .addPath(new BezierCurve(new Point(hang_Sp5),new Point(End)))
+                .setLinearHeadingInterpolation(hang_Sp5.getHeading(), End.getHeading())
                 .build();
 
         Finish = follower.pathBuilder()
@@ -191,7 +191,7 @@ public class SPECIMEN_AUTONOMOUS_RED extends OpMode {
     public void autonomousPathUpdate() throws InterruptedException {
         switch (pathState) {
             case 0:
-
+                OPEN.setPosition(0);
                 setMec(0);
                 follower.setMaxPower(0.7);
                 follower.followPath(hang_preload , true);
@@ -288,7 +288,7 @@ public class SPECIMEN_AUTONOMOUS_RED extends OpMode {
                 if(follower.getPose().getX() < (pl_Sp2_Back.getX() + 1) && Math.abs(follower.getPose().getY()) > Math.abs(pl_Sp2_Back.getY()) - 1 ) {
                     follower.setMaxPower(1);
                     spin.setPosition(0);
-                    wrist.setPosition(0.28);
+                    wrist.setPosition(0.46);
                     follower.followPath(Point8_Sp4FW,true);
 
                     setPathState(9);
@@ -339,18 +339,21 @@ public class SPECIMEN_AUTONOMOUS_RED extends OpMode {
                     wrist.setPosition(1);
                     spin.setPosition(0);
                     neep.setPosition(0);
-                    Thread.sleep(100);
+                    Thread.sleep(200);
+                    Servo_kan(1);
+                    Thread.sleep(150);
+                    setMec(2);
                     setPathState(12);
                 }
                 break;
             case 12:
                 if(follower.getPose().getX() > (hang_Sp2.getX() - 1) && Math.abs(follower.getPose().getY()) < Math.abs(hang_Sp2.getY()) + 1) {
                     follower.setMaxPower(1);
-                    follower.followPath(keepSp3,true);
+                    wrist.setPosition(0.46);
                     Servo_kan(1);
-                    Thread.sleep(150);
-                    setMec(2);
-                    wrist.setPosition(0.28);
+                    Thread.sleep(200);
+                    spin.setPosition(0);
+                    follower.followPath(keepSp3,true);
                     setPathState(104);
                 }
                 break;
@@ -386,7 +389,7 @@ public class SPECIMEN_AUTONOMOUS_RED extends OpMode {
             case 14:
                 if(follower.getPose().getX() > (hang_Sp3.getX() - 1) && Math.abs(follower.getPose().getY()) < Math.abs(hang_Sp3.getY()) + 1)  {
                     follower.setMaxPower(1);
-                    wrist.setPosition(0.28);
+                    wrist.setPosition(0.46);
                     Servo_kan(1);
                     Thread.sleep(200);
                     spin.setPosition(0);
@@ -428,7 +431,7 @@ public class SPECIMEN_AUTONOMOUS_RED extends OpMode {
             case 16:
                 if(follower.getPose().getX() > (hang_Sp4.getX() - 1) && Math.abs(follower.getPose().getY()) < Math.abs(hang_Sp4.getY()) + 1)  {
                     follower.setMaxPower(1);
-                    wrist.setPosition(0.28);
+                    wrist.setPosition(0.46);
                     Servo_kan(1);
                     Thread.sleep(200);
                     spin.setPosition(0);
@@ -482,7 +485,7 @@ public class SPECIMEN_AUTONOMOUS_RED extends OpMode {
     public void mecpath() throws InterruptedException{
         switch (mec) {
             case 0:
-                uplifthang(630);
+                uplifthang(640);
                 break;
             case 1:
                 uplifthang(350);

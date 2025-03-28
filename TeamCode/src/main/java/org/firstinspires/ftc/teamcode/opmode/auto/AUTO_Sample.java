@@ -50,6 +50,7 @@ public class AUTO_Sample extends OpMode {
     private Servo P3;
     private DcMotor L2 ;
     private DcMotor L1 ;
+    private Servo OPEN;
     private track track_color ;
     private int count = 0;
     private List keeper = JavaUtil.createListWith();
@@ -57,16 +58,16 @@ public class AUTO_Sample extends OpMode {
 
     private final Pose startPose = new Pose(0, 0, Math.toRadians(0));
     private final Pose set_Sample = new Pose(-18, 4, Math.toRadians(45));
-    private final Pose keep_S2 = new Pose(-11, 12.5, Math.toRadians(90));
+    private final Pose keep_S2 = new Pose(-11, 13, Math.toRadians(90));
     private final Pose set_Sample2 = new Pose(-20, 8, Math.toRadians(62));
     private final Pose keep_S3 = new Pose(-20, 12.5, Math.toRadians(90));
     private final Pose set_Sample3 = new Pose(-22, 8, Math.toRadians(50));
-    private final Pose keep_S4 = new Pose(-20.8, 13.5, Math.toRadians(112));
+    private final Pose keep_S4 = new Pose(-20.8, 14, Math.toRadians(112));
     private final Pose set_Sample4 = new Pose(-21.5, 10, Math.toRadians(55));
     private final Pose b_final = new Pose(-10, 55, Math.toRadians(55));
     private Pose final0 = new Pose(12.5,55.72,Math.toRadians(0));
     private Pose keep_S5 = new Pose(12.5,51.72,Math.toRadians(0));
-    private final Pose set_Sample5 = new Pose(-24, 8, Math.toRadians(45));
+    private final Pose set_Sample5 = new Pose(-24, 6.8, Math.toRadians(45));
     private  Pose final1 = new Pose(7.28,55.72,Math.toRadians(0));
 
 
@@ -131,6 +132,7 @@ public class AUTO_Sample extends OpMode {
     public void autonomousPathUpdate() throws InterruptedException {
         switch (pathState) {
             case 0:
+                OPEN.setPosition(0);
                 follower.setMaxPower(0.9);
                 neep.setPosition(1);
                 setMec(0);
@@ -428,13 +430,14 @@ public class AUTO_Sample extends OpMode {
         L1 = hardwareMap.get(DcMotor.class, "L1");
         L2 = hardwareMap.get(DcMotor.class, "L2");
         P3 = hardwareMap.get(Servo.class, "P3");
+        OPEN = hardwareMap.get(Servo.class, "OPEN");
         wrist.setDirection(Servo.Direction.REVERSE);
         L1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         L2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         L1.setDirection(DcMotor.Direction.REVERSE);
         L1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         L2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
+        OPEN.setPosition(0);
 
     }
 
