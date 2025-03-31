@@ -318,6 +318,7 @@ public class SPECIMEN_AUTONOMOUS_RED extends OpMode {
 
             case 102:
                 if(!follower.isBusy()) {
+                    wrist.setPosition(0.46);
                     neep.setPosition(1);
                     Thread.sleep(250);
                     setMec(0);
@@ -359,6 +360,7 @@ public class SPECIMEN_AUTONOMOUS_RED extends OpMode {
                 break;
             case 104:
                 if(!follower.isBusy()) {
+                    wrist.setPosition(0.46);
                     neep.setPosition(1);
                     Thread.sleep(250);
                     setMec(0);
@@ -388,7 +390,7 @@ public class SPECIMEN_AUTONOMOUS_RED extends OpMode {
                 break;
             case 14:
                 if(follower.getPose().getX() > (hang_Sp3.getX() - 1) && Math.abs(follower.getPose().getY()) < Math.abs(hang_Sp3.getY()) + 1)  {
-                    follower.setMaxPower(1);
+                    follower.setMaxPower(0.88);
                     wrist.setPosition(0.46);
                     Servo_kan(1);
                     Thread.sleep(200);
@@ -400,6 +402,7 @@ public class SPECIMEN_AUTONOMOUS_RED extends OpMode {
 
             case 106:
                 if(!follower.isBusy()){
+                    wrist.setPosition(0.46);
                     neep.setPosition(1);
                     Thread.sleep(250);
                     setMec(0);
@@ -430,7 +433,7 @@ public class SPECIMEN_AUTONOMOUS_RED extends OpMode {
 
             case 16:
                 if(follower.getPose().getX() > (hang_Sp4.getX() - 1) && Math.abs(follower.getPose().getY()) < Math.abs(hang_Sp4.getY()) + 1)  {
-                    follower.setMaxPower(1);
+                    follower.setMaxPower(88);
                     wrist.setPosition(0.46);
                     Servo_kan(1);
                     Thread.sleep(200);
@@ -442,6 +445,7 @@ public class SPECIMEN_AUTONOMOUS_RED extends OpMode {
 
             case 109:
                 if(!follower.isBusy()) {
+                    wrist.setPosition(0.46);
                     neep.setPosition(1);
                     Thread.sleep(250);
                     setMec(0);
