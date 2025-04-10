@@ -67,7 +67,7 @@ public class AUTO_Sample extends OpMode {
     private final Pose b_final = new Pose(-10, 55, Math.toRadians(55));
     private Pose final0 = new Pose(12.5,55.72,Math.toRadians(0));
     private Pose keep_S5 = new Pose(12.5,51.72,Math.toRadians(0));
-    private final Pose set_Sample5 = new Pose(-22.5, 6, Math.toRadians(45));
+    private final Pose set_Sample5 = new Pose(-21.8, 7.2, Math.toRadians(45));
     private  Pose final1 = new Pose(12.5,55.72,Math.toRadians(0));
 
 

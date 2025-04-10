@@ -106,7 +106,7 @@ public class track extends OpMode {
                     myPoints = new org.opencv.core.Point[4];
                     myBoxFit.points(myPoints);
                 }
-                if (mySize.width / mySize.height < 0.6) {vertical = true;}
+                if (mySize.width / mySize.height < 0.5) {vertical = true;}
                 else {vertical = false;}
 
                 if (check_verticle == vertical){
@@ -149,7 +149,7 @@ public class track extends OpMode {
                         //Front
                         data_return.set(4,2);
                         right_x = 0.8;
-                        right_y = 0.9;
+                        right_y = 0.95;
                     }
                     else{
                         //Back

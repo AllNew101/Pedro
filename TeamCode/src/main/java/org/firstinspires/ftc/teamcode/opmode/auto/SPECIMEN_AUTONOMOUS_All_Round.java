@@ -68,12 +68,12 @@ public class SPECIMEN_AUTONOMOUS_All_Round extends OpMode {
     private final Pose pl_Sp3_FW = new Pose(50, -54, Math.toRadians(0));
     private final Pose pl_Sp3_Slide = new Pose(50, -57, Math.toRadians(0));
     private final Pose human_Sp2 = new Pose(12, -57, Math.toRadians(0));
-    private final Pose hang_Sp2 = new Pose(25.5, 3.8, Math.toRadians(0));
+    private final Pose hang_Sp2 = new Pose(25.5, 4, Math.toRadians(0));
     private Pose keep_Sp3 = new Pose(11.2, -30, Math.toRadians(0));
     private Pose keep_Sp3_pedro = new Pose(12, -30, Math.toRadians(0));
-    private final Pose hang_Sp3 = new Pose(25.5, 2.6, Math.toRadians(0));
+    private final Pose hang_Sp3 = new Pose(25.5, 3, Math.toRadians(0));
     private final Pose hang_Sp4 = new Pose(25.5, -1, Math.toRadians(0));
-    private final Pose hang_Sp5 = new Pose(25.8, -2.5, Math.toRadians(0));
+    private final Pose hang_Sp5 = new Pose(26, -2.6, Math.toRadians(0));
     private final Pose hang_Sp_back = new Pose(14, -2, Math.toRadians(0));
     private final Pose End = new Pose(10.8, -30, Math.toRadians(-90));
 
@@ -381,7 +381,7 @@ public class SPECIMEN_AUTONOMOUS_All_Round extends OpMode {
                             .addPath(new BezierCurve(new Point(keep_Sp3),new Point(keep_Sp3_pedro)))
                             .setLinearHeadingInterpolation(keep_Sp3.getHeading(), keep_Sp3_pedro.getHeading())
                             .build();
-                    follower.followPath(keep_specimen,false);
+                    follower.followPath(keep_specimen,true);
 
                     if (Dissenser.getDistance(DistanceUnit.INCH) <= 11.2){
                         neep.setPosition(1);
@@ -491,7 +491,7 @@ public class SPECIMEN_AUTONOMOUS_All_Round extends OpMode {
                             .addPath(new BezierCurve(new Point(keep_Sp3),new Point(keep_Sp3_pedro)))
                             .setLinearHeadingInterpolation(keep_Sp3.getHeading(), keep_Sp3_pedro.getHeading())
                             .build();
-                    follower.followPath(keep_specimen,false);
+                    follower.followPath(keep_specimen,true);
 
                     if (Dissenser.getDistance(DistanceUnit.INCH) <= 11.2){
                         neep.setPosition(1);
