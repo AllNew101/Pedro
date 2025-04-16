@@ -75,13 +75,7 @@ public class S5_Test extends OpMode {
     @Override
     public void start() {
 
-        track1.max_area = 6000;
         keeper = track1.track(true);
-        telemetry.addData("Read",keeper);
-
-
-
-        keeper = track1.track(false);
         telemetry.addData("Read",keeper);
 
         telemetry.update();

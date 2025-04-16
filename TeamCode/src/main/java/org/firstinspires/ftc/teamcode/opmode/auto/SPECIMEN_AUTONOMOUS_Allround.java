@@ -4,8 +4,10 @@ package org.firstinspires.ftc.teamcode.opmode.auto;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.pedroPathing.follower.Follower;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.BezierCurve;
@@ -17,8 +19,8 @@ import org.firstinspires.ftc.teamcode.pedroPathing.util.Timer;
 
 //import org.firstinspires.ftc.teamcode.config.subsystem.ClawSubsystem;
 
-@Autonomous(name = "AutoSpecimen_RED")
-public class SPECIMEN_AUTONOMOUS_RED extends OpMode {
+@Autonomous(name = "AutoSpecimen_All_Round")
+public class SPECIMEN_AUTONOMOUS_Allround extends OpMode {
 
     private Follower follower;
     private Timer pathTimer, actionTimer, opmodeTimer;
@@ -34,7 +36,10 @@ public class SPECIMEN_AUTONOMOUS_RED extends OpMode {
     private Servo wrist;
     private DcMotor L2 ;
     private DcMotor L1 ;
+    private DistanceSensor Dissenser;
     private Servo OPEN;
+
+    double x = 0;
 
 
     /** This is our claw subsystem.
@@ -52,29 +57,30 @@ public class SPECIMEN_AUTONOMOUS_RED extends OpMode {
 
     /** Start Pose of our robot */
     private final Pose startPose = new Pose(0, 0, Math.toRadians(0));
-    private final Pose hang_Sp1 = new Pose(26.8, 0, Math.toRadians(0));
+    private final Pose hang_Sp1 = new Pose(26.2, 0, Math.toRadians(0));
     private final Pose Slide_Sp1 = new Pose(24, -25, Math.toRadians(0));
-    private final Pose pl_Sp1_FW = new Pose(50, -32, Math.toRadians(0));
-    private final Pose pl_Sp1_Slide = new Pose(50, -39, Math.toRadians(0));
+    private final Pose pl_Sp1_FW = new Pose(48.8, -32, Math.toRadians(0));
+    private final Pose pl_Sp1_Slide = new Pose(48.8, -39, Math.toRadians(0));
     private final Pose pl_Sp1_Back = new Pose(16, -39, Math.toRadians(0));
-    private final Pose pl_Sp2_FW = new Pose(50, -44, Math.toRadians(0));
-    private final Pose pl_Sp2_Slide = new Pose(50, -48, Math.toRadians(0));
+    private final Pose pl_Sp2_FW = new Pose(48.8, -44, Math.toRadians(0));
+    private final Pose pl_Sp2_Slide = new Pose(48.8, -48, Math.toRadians(0));
     private final Pose pl_Sp2_Back = new Pose(16, -48, Math.toRadians(0));
-    private final Pose pl_Sp3_FW = new Pose(50, -54, Math.toRadians(0));
-    private final Pose pl_Sp3_Slide = new Pose(50, -57, Math.toRadians(0));
+    private final Pose pl_Sp3_FW = new Pose(48.8, -54, Math.toRadians(0));
+    private final Pose pl_Sp3_Slide = new Pose(48.8, -57, Math.toRadians(0));
     private final Pose human_Sp2 = new Pose(12, -57, Math.toRadians(0));
-    private final Pose hang_Sp2 = new Pose(25.5, 3.2, Math.toRadians(0));
-    private final Pose keep_Sp3 = new Pose(10.8, -30, Math.toRadians(0));
-    private final Pose hang_Sp3 = new Pose(25.5, 2, Math.toRadians(0));
-    private final Pose hang_Sp4 = new Pose(25.5, -1, Math.toRadians(0));
-    private final Pose hang_Sp5 = new Pose(25.8, -2.5, Math.toRadians(0));
+    private final Pose hang_Sp2 = new Pose(24.8, 4, Math.toRadians(0));
+    private Pose keep_Sp3 = new Pose(10.6, -30, Math.toRadians(0));
+    private Pose keep_Sp3_pedro = new Pose(12, -30, Math.toRadians(0));
+    private final Pose hang_Sp3 = new Pose(24.8, 3, Math.toRadians(0));
+    private final Pose hang_Sp4 = new Pose(24.8, -1, Math.toRadians(0));
+    private final Pose hang_Sp5 = new Pose(24.8, -2.6, Math.toRadians(0));
     private final Pose hang_Sp_back = new Pose(14, -2, Math.toRadians(0));
     private final Pose End = new Pose(10.8, -30, Math.toRadians(-90));
 
 
 
     private Path hang_preload, park;
-    private PathChain Point1_hang, Point2_Sp2FW, Point3_Sp2Sl, Point4_Sp2Back,  Point5_Sp3FW, Point6_Sp3Sl,Point7_Sp3Ba,Point8_Sp4FW,Point9_Sp4Sl,Point10_Sp4keep,hangSp2,keepSp3,hangSp3,hangSp4,hangSp5,keepSp1,keepSp2,Finish,hangSp5back,keep_sample;
+    private PathChain Point1_hang,keep_specimen, Point2_Sp2FW, Point3_Sp2Sl, Point4_Sp2Back,  Point5_Sp3FW, Point6_Sp3Sl,Point7_Sp3Ba,Point8_Sp4FW,Point9_Sp4Sl,Point10_Sp4keep,hangSp2,keepSp3,hangSp3,hangSp4,hangSp5,keepSp1,keepSp2,Finish,hangSp5back,keep_sample;
 
     /** Build the paths for the auto (adds, for example, constant/linear headings while doing paths)
      * It is necessary to do this so that all the paths are built before the auto starts. **/
@@ -178,6 +184,11 @@ public class SPECIMEN_AUTONOMOUS_RED extends OpMode {
                 .setLinearHeadingInterpolation(hang_Sp5.getHeading(), End.getHeading())
                 .build();
 
+        keep_specimen = follower.pathBuilder()
+                .addPath(new BezierCurve(new Point(keep_Sp3),new Point(keep_Sp3_pedro)))
+                .setLinearHeadingInterpolation(keep_Sp3.getHeading(), keep_Sp3_pedro.getHeading())
+                .build();
+
         Finish = follower.pathBuilder()
                 .addPath(new BezierCurve(new Point(keep_Sp3),new Point(End)))
                 .setLinearHeadingInterpolation(keep_Sp3.getHeading(), End.getHeading())
@@ -191,9 +202,10 @@ public class SPECIMEN_AUTONOMOUS_RED extends OpMode {
     public void autonomousPathUpdate() throws InterruptedException {
         switch (pathState) {
             case 0:
-                OPEN.setPosition(0);
+//                OPEN.setPosition(0.9);
+//                Thread.sleep(150);
                 setMec(0);
-                follower.setMaxPower(0.7);
+                follower.setMaxPower(0.4);
                 follower.followPath(hang_preload , true);
                 neep.setPosition(1);
                 spin.setPosition(0);
@@ -288,7 +300,7 @@ public class SPECIMEN_AUTONOMOUS_RED extends OpMode {
                 if(follower.getPose().getX() < (pl_Sp2_Back.getX() + 1) && Math.abs(follower.getPose().getY()) > Math.abs(pl_Sp2_Back.getY()) - 1 ) {
                     follower.setMaxPower(1);
                     spin.setPosition(0);
-                    wrist.setPosition(0.46);
+                    wrist.setPosition(0.54);
                     follower.followPath(Point8_Sp4FW,true);
 
                     setPathState(9);
@@ -318,9 +330,9 @@ public class SPECIMEN_AUTONOMOUS_RED extends OpMode {
 
             case 102:
                 if(!follower.isBusy()) {
-                    wrist.setPosition(0.46);
+                    wrist.setPosition(0.53);
                     neep.setPosition(1);
-                    Thread.sleep(250);
+                    Thread.sleep(200);
                     setMec(0);
                     neep.setPosition(1);
                     spin.setPosition(0);
@@ -329,7 +341,7 @@ public class SPECIMEN_AUTONOMOUS_RED extends OpMode {
                 break;
 
             case 11:
-                if (follower.getPose().getX() < (human_Sp2.getX() + 0.1) && Math.abs(follower.getPose().getY()) > Math.abs(human_Sp2.getY()) - 0.1) {
+                if (follower.getPose().getX() < (human_Sp2.getX() + 1) && Math.abs(follower.getPose().getY()) > Math.abs(human_Sp2.getY()) - 1) {
                     follower.setMaxPower(1);
                     follower.followPath(hangSp2,true);
                     setPathState(103);
@@ -343,6 +355,7 @@ public class SPECIMEN_AUTONOMOUS_RED extends OpMode {
                     Thread.sleep(200);
                     Servo_kan(1);
                     Thread.sleep(150);
+                    wrist.setPosition(0.525);
                     setMec(2);
                     setPathState(12);
                 }
@@ -350,17 +363,45 @@ public class SPECIMEN_AUTONOMOUS_RED extends OpMode {
             case 12:
                 if(follower.getPose().getX() > (hang_Sp2.getX() - 1) && Math.abs(follower.getPose().getY()) < Math.abs(hang_Sp2.getY()) + 1) {
                     follower.setMaxPower(1);
-                    wrist.setPosition(0.46);
+                    wrist.setPosition(0.53);
                     Servo_kan(1);
                     Thread.sleep(200);
                     spin.setPosition(0);
                     follower.followPath(keepSp3,true);
-                    setPathState(104);
+                    setPathState(1234);
+                }
+                break;
+            case 1234:
+                if(!follower.isBusy()) {
+
+                    wrist.setPosition(0.53);
+                    follower.setMaxPower(0.75);
+                    keep_Sp3 = new Pose(follower.getPose().getX() , follower.getPose().getY() , Math.toRadians(0));
+                    keep_Sp3_pedro = new Pose(keep_Sp3.getX() - 1, keep_Sp3.getY(), Math.toRadians(0));
+                    keep_specimen = follower.pathBuilder()
+                            .addPath(new BezierCurve(new Point(keep_Sp3),new Point(keep_Sp3_pedro)))
+                            .setLinearHeadingInterpolation(keep_Sp3.getHeading(), keep_Sp3_pedro.getHeading())
+                            .build();
+                    follower.followPath(keep_specimen,true);
+
+                    if (Dissenser.getDistance(DistanceUnit.INCH) <= 11.2){
+                        neep.setPosition(1);
+                        setPathState(104);
+                    }
+                    else{
+                        setPathState(1234);
+                    }
+
                 }
                 break;
             case 104:
-                if(!follower.isBusy()) {
-                    wrist.setPosition(0.46);
+                if(true) {
+                    hangSp3 = follower.pathBuilder()
+                            .addPath(new BezierCurve(new Point(keep_Sp3_pedro),new Point(hang_Sp_back), new Point(hang_Sp3)))
+                            .setLinearHeadingInterpolation(keep_Sp3_pedro.getHeading(), hang_Sp3.getHeading())
+                            .build();
+                    wrist.setPosition(0.53);
+
                     neep.setPosition(1);
                     Thread.sleep(250);
                     setMec(0);
@@ -390,8 +431,8 @@ public class SPECIMEN_AUTONOMOUS_RED extends OpMode {
                 break;
             case 14:
                 if(follower.getPose().getX() > (hang_Sp3.getX() - 1) && Math.abs(follower.getPose().getY()) < Math.abs(hang_Sp3.getY()) + 1)  {
-                    follower.setMaxPower(0.88);
-                    wrist.setPosition(0.46);
+                    follower.setMaxPower(0.85);
+                    wrist.setPosition(0.53);
                     Servo_kan(1);
                     Thread.sleep(200);
                     spin.setPosition(0);
@@ -402,7 +443,7 @@ public class SPECIMEN_AUTONOMOUS_RED extends OpMode {
 
             case 106:
                 if(!follower.isBusy()){
-                    wrist.setPosition(0.46);
+                    wrist.setPosition(0.53);
                     neep.setPosition(1);
                     Thread.sleep(250);
                     setMec(0);
@@ -433,19 +474,43 @@ public class SPECIMEN_AUTONOMOUS_RED extends OpMode {
 
             case 16:
                 if(follower.getPose().getX() > (hang_Sp4.getX() - 1) && Math.abs(follower.getPose().getY()) < Math.abs(hang_Sp4.getY()) + 1)  {
-                    follower.setMaxPower(88);
-                    wrist.setPosition(0.46);
+                    follower.setMaxPower(0.85);
+                    wrist.setPosition(0.53);
                     Servo_kan(1);
                     Thread.sleep(200);
                     spin.setPosition(0);
                     follower.followPath(keepSp2,true);
-                    setPathState(109);
+                    setPathState(1235);
                 }
                 break;
-
-            case 109:
+            case 1235:
                 if(!follower.isBusy()) {
-                    wrist.setPosition(0.46);
+                    follower.setMaxPower(0.65);
+                    keep_Sp3 = new Pose(follower.getPose().getX(), follower.getPose().getY(), Math.toRadians(0));
+                    keep_Sp3_pedro = new Pose(keep_Sp3.getX() - 1, keep_Sp3.getY(), Math.toRadians(0));
+                    keep_specimen = follower.pathBuilder()
+                            .addPath(new BezierCurve(new Point(keep_Sp3),new Point(keep_Sp3_pedro)))
+                            .setLinearHeadingInterpolation(keep_Sp3.getHeading(), keep_Sp3_pedro.getHeading())
+                            .build();
+                    follower.followPath(keep_specimen,true);
+
+                    if (Dissenser.getDistance(DistanceUnit.INCH) <= 11.2){
+                        neep.setPosition(1);
+                        setPathState(109);
+                    }
+                    else{
+                        setPathState(1235);
+                    }
+
+                }
+                break;
+            case 109:
+                if(true) {
+                    hangSp5 = follower.pathBuilder()
+                            .addPath(new BezierCurve(new Point(keep_Sp3_pedro),new Point(hang_Sp_back), new Point(hang_Sp5)))
+                            .setLinearHeadingInterpolation(keep_Sp3_pedro.getHeading(), hang_Sp5.getHeading())
+                            .build();
+                    wrist.setPosition(0.53);
                     neep.setPosition(1);
                     Thread.sleep(250);
                     setMec(0);
@@ -558,13 +623,13 @@ public class SPECIMEN_AUTONOMOUS_RED extends OpMode {
         L1 = hardwareMap.get(DcMotor.class, "L1");
         L2 = hardwareMap.get(DcMotor.class, "L2");
         OPEN = hardwareMap.get(Servo.class, "OPEN");
+        Dissenser = hardwareMap.get(DistanceSensor.class, "Dissenser");
         wrist.setDirection(Servo.Direction.REVERSE);
         L1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         L2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         L1.setDirection(DcMotor.Direction.REVERSE);
         L1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         L2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        OPEN.setPosition(0);
     }
 
     /** This method is called continuously after Init while waiting for "play". **/
@@ -577,6 +642,7 @@ public class SPECIMEN_AUTONOMOUS_RED extends OpMode {
     public void start() {
         opmodeTimer.resetTimer();
         setPathState(0);
+        setMec(-1);
     }
 
     private void Servo_kan(double right) {
@@ -641,7 +707,7 @@ public class SPECIMEN_AUTONOMOUS_RED extends OpMode {
     }
     /**
 
-    /** We do not use this because everything should automatically disable **/
+     /** We do not use this because everything should automatically disable **/
     @Override
     public void stop() {
     }

@@ -106,10 +106,12 @@ public class track extends OpMode {
                     myPoints = new org.opencv.core.Point[4];
                     myBoxFit.points(myPoints);
                 }
-                if (mySize.width / mySize.height > 1) {vertical = false;}
-                else if (mySize.width / mySize.height < 1){vertical = true;}
 
-                if (check_verticle == vertical){
+                if (mySize.width / mySize.height < 0.5)
+                {vertical = true;}
+                else {vertical = false;}
+
+                if (vertical == true){
                     data_right.add(JavaUtil.createListWith(Math.round(Math.sqrt(Math.pow(Perfect_X - myBoxFit.center.x, 2) + Math.pow(Perfect_Y - myBoxFit.center.y, 2))), vertical, myBoxFit.center.x, myBoxFit.center.y));
                 }
 
@@ -134,7 +136,7 @@ public class track extends OpMode {
                         //Front
                         data_return.set(4,0);
                         right_x = 0.8;
-                        right_y = 0.8;
+                        right_y = 0.92;
                     }
                     else{
                         //Back
@@ -149,47 +151,17 @@ public class track extends OpMode {
                         //Front
                         data_return.set(4,2);
                         right_x = 0.8;
-                        right_y = 0.9;
+                        right_y = 0.95;
                     }
                     else{
                         //Back
                         data_return.set(4,3);
-                        right_x = 0.85;
+                        right_x = 0.95;
                         right_y = 0.9;
                     }
                 }
             }
-            else {
-                data_return.set(0, 1);
-                if ((160.0 - ((Double) JavaUtil.inListGet((((List) JavaUtil.inListGet(data_right, JavaUtil.AtMode.FROM_START, (int) 0, false))), JavaUtil.AtMode.FROM_START, (int) 2, false)).doubleValue()) > 0) {
-                    //right
-                    if ((120.0 - ((Double) JavaUtil.inListGet((((List) JavaUtil.inListGet(data_right, JavaUtil.AtMode.FROM_START, (int) 0, false))), JavaUtil.AtMode.FROM_START, (int) 3, false)).doubleValue()) > 0) {
-                        //Front
-                        data_return.set(4,5);
-                        right_x = 1;
-                        right_y = 0.8;
-                    } else {
-                        //Back
-                        data_return.set(4,6);
-                        right_x = 1;
-                        right_y = 1.2;
-                    }
-                } else {
-                    //left
 
-                    if ((120.0 - ((Double) JavaUtil.inListGet((((List) JavaUtil.inListGet(data_right, JavaUtil.AtMode.FROM_START, (int) 0, false))), JavaUtil.AtMode.FROM_START, (int) 3, false)).doubleValue()) > 0) {
-                        //Front
-                        data_return.set(4,7);
-                        right_x = 0.8;
-                        right_y = 0.9;
-                    } else {
-                        //Back
-                        data_return.set(4,8);
-                        right_x = 0.76;
-                        right_y = 0.9;
-                    }
-                }
-            }
 
             if ((Long)JavaUtil.inListGet((((List) JavaUtil.inListGet(data_right, JavaUtil.AtMode.FROM_START, (int) 0, false))), JavaUtil.AtMode.FROM_START, (int) 0, false) <= 20) {
                 data_return.set(1,1);

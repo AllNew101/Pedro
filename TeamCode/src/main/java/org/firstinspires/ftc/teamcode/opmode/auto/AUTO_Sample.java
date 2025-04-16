@@ -32,7 +32,7 @@ import java.util.List;
  * @version 2.0, 11/28/2024
  */
 
-@Autonomous(name = "AutoSample_BLUE")
+@Autonomous(name = "AutoSample_All_Round")
 public class AUTO_Sample extends OpMode {
 
     private Follower follower;
@@ -58,17 +58,17 @@ public class AUTO_Sample extends OpMode {
 
     private final Pose startPose = new Pose(0, 0, Math.toRadians(0));
     private final Pose set_Sample = new Pose(-18, 4, Math.toRadians(45));
-    private final Pose keep_S2 = new Pose(-11, 13, Math.toRadians(90));
+    private final Pose keep_S2 = new Pose(-11, 12, Math.toRadians(90));
     private final Pose set_Sample2 = new Pose(-20, 8, Math.toRadians(62));
-    private final Pose keep_S3 = new Pose(-20, 12.5, Math.toRadians(90));
+    private final Pose keep_S3 = new Pose(-20.2, 10.2, Math.toRadians(90));
     private final Pose set_Sample3 = new Pose(-22, 8, Math.toRadians(50));
-    private final Pose keep_S4 = new Pose(-20.8, 14, Math.toRadians(112));
+    private final Pose keep_S4 = new Pose(-21.4, 12.2, Math.toRadians(112));
     private final Pose set_Sample4 = new Pose(-21.5, 10, Math.toRadians(55));
     private final Pose b_final = new Pose(-10, 55, Math.toRadians(55));
-    private Pose final0 = new Pose(12.5,55.72,Math.toRadians(0));
-    private Pose keep_S5 = new Pose(12.5,51.72,Math.toRadians(0));
-    private final Pose set_Sample5 = new Pose(-24, 6.8, Math.toRadians(45));
-    private  Pose final1 = new Pose(7.28,55.72,Math.toRadians(0));
+    private Pose final0 = new Pose(11,55.72,Math.toRadians(0));
+    private Pose keep_S5 = new Pose(11,51.72,Math.toRadians(0));
+    private final Pose set_Sample5 = new Pose(-21.8, 7.2, Math.toRadians(45));
+    private  Pose final1 = new Pose(11,55.72,Math.toRadians(0));
 
 
 
@@ -400,12 +400,12 @@ public class AUTO_Sample extends OpMode {
         }
 
         // Feedback to Driver Hub
-        telemetry.addData("path state", pathState);
-        telemetry.addData("x", follower.getPose().getX());
-        telemetry.addData("y", follower.getPose().getY());
-        telemetry.addData("heading", follower.getPose().getHeading());
-        telemetry.addData("lift1",L1.getCurrentPosition());
-        telemetry.addData("lift2",L2.getCurrentPosition());
+//        telemetry.addData("path state", pathState);
+//        telemetry.addData("x", follower.getPose().getX());
+//        telemetry.addData("y", follower.getPose().getY());
+//        telemetry.addData("heading", follower.getPose().getHeading());
+//        telemetry.addData("lift1",L1.getCurrentPosition());
+//        telemetry.addData("lift2",L2.getCurrentPosition());
 
     }
 
@@ -437,8 +437,6 @@ public class AUTO_Sample extends OpMode {
         L1.setDirection(DcMotor.Direction.REVERSE);
         L1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         L2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        OPEN.setPosition(0);
-
     }
 
     /** This method is called continuously after Init while waiting for "play". **/
