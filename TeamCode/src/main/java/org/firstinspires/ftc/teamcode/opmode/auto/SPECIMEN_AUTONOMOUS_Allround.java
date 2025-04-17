@@ -57,7 +57,7 @@ public class SPECIMEN_AUTONOMOUS_Allround extends OpMode {
 
     /** Start Pose of our robot */
     private final Pose startPose = new Pose(0, 0, Math.toRadians(0));
-    private final Pose hang_Sp1 = new Pose(26.2, 0, Math.toRadians(0));
+    private final Pose hang_Sp1 = new Pose(26.8, 0, Math.toRadians(0));
     private final Pose Slide_Sp1 = new Pose(24, -25, Math.toRadians(0));
     private final Pose pl_Sp1_FW = new Pose(48.8, -32, Math.toRadians(0));
     private final Pose pl_Sp1_Slide = new Pose(48.8, -39, Math.toRadians(0));
@@ -68,13 +68,14 @@ public class SPECIMEN_AUTONOMOUS_Allround extends OpMode {
     private final Pose pl_Sp3_FW = new Pose(48.8, -54, Math.toRadians(0));
     private final Pose pl_Sp3_Slide = new Pose(48.8, -57, Math.toRadians(0));
     private final Pose human_Sp2 = new Pose(12, -57, Math.toRadians(0));
-    private final Pose hang_Sp2 = new Pose(24.8, 4, Math.toRadians(0));
+    private final Pose hang_Sp2 = new Pose(24.8, 3.2, Math.toRadians(0));
     private Pose keep_Sp3 = new Pose(10.6, -30, Math.toRadians(0));
     private Pose keep_Sp3_pedro = new Pose(12, -30, Math.toRadians(0));
     private final Pose hang_Sp3 = new Pose(24.8, 3, Math.toRadians(0));
     private final Pose hang_Sp4 = new Pose(24.8, -1, Math.toRadians(0));
     private final Pose hang_Sp5 = new Pose(24.8, -2.6, Math.toRadians(0));
     private final Pose hang_Sp_back = new Pose(14, -2, Math.toRadians(0));
+    private final Pose hang_Sp_back2 = new Pose(14, 3, Math.toRadians(0));
     private final Pose End = new Pose(10.8, -30, Math.toRadians(-90));
 
 
@@ -145,7 +146,7 @@ public class SPECIMEN_AUTONOMOUS_Allround extends OpMode {
                 .build();
 
         hangSp2 = follower.pathBuilder()
-                .addPath(new BezierCurve(new Point(human_Sp2),new Point(hang_Sp_back) ,new Point(hang_Sp2)))
+                .addPath(new BezierCurve(new Point(human_Sp2),new Point(hang_Sp_back2) ,new Point(hang_Sp2)))
                 .setLinearHeadingInterpolation(human_Sp2.getHeading(), hang_Sp2.getHeading())
                 .build();
 
@@ -202,10 +203,8 @@ public class SPECIMEN_AUTONOMOUS_Allround extends OpMode {
     public void autonomousPathUpdate() throws InterruptedException {
         switch (pathState) {
             case 0:
-//                OPEN.setPosition(0.9);
-//                Thread.sleep(150);
                 setMec(0);
-                follower.setMaxPower(0.4);
+                follower.setMaxPower(0.35);
                 follower.followPath(hang_preload , true);
                 neep.setPosition(1);
                 spin.setPosition(0);

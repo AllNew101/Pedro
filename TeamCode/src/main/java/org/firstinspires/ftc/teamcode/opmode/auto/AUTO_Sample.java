@@ -60,14 +60,14 @@ public class AUTO_Sample extends OpMode {
     private final Pose set_Sample = new Pose(-18, 4, Math.toRadians(45));
     private final Pose keep_S2 = new Pose(-11, 12, Math.toRadians(90));
     private final Pose set_Sample2 = new Pose(-20, 8, Math.toRadians(62));
-    private final Pose keep_S3 = new Pose(-20.2, 10.2, Math.toRadians(90));
-    private final Pose set_Sample3 = new Pose(-22, 8, Math.toRadians(50));
-    private final Pose keep_S4 = new Pose(-21.4, 12.2, Math.toRadians(112));
-    private final Pose set_Sample4 = new Pose(-21.5, 10, Math.toRadians(55));
+    private final Pose keep_S3 = new Pose(-20.6, 11, Math.toRadians(90));
+    private final Pose set_Sample3 = new Pose(-22, 7.6, Math.toRadians(50));
+    private final Pose keep_S4 = new Pose(-21.4, 12, Math.toRadians(112.5));
+    private final Pose set_Sample4 = new Pose(-21.5, 8, Math.toRadians(55));
     private final Pose b_final = new Pose(-10, 55, Math.toRadians(55));
     private Pose final0 = new Pose(11,55.72,Math.toRadians(0));
     private Pose keep_S5 = new Pose(11,51.72,Math.toRadians(0));
-    private final Pose set_Sample5 = new Pose(-21.8, 7.2, Math.toRadians(45));
+    private final Pose set_Sample5 = new Pose(-21, 5.8, Math.toRadians(48));
     private  Pose final1 = new Pose(11,55.72,Math.toRadians(0));
 
 
@@ -132,7 +132,6 @@ public class AUTO_Sample extends OpMode {
     public void autonomousPathUpdate() throws InterruptedException {
         switch (pathState) {
             case 0:
-                OPEN.setPosition(0);
                 follower.setMaxPower(0.9);
                 neep.setPosition(1);
                 setMec(0);
@@ -203,7 +202,7 @@ public class AUTO_Sample extends OpMode {
                     follower.setMaxPower(0.8);
                     Servo_kan(0);
                     wrist.setPosition(1);
-                    Thread.sleep(250);
+                    Thread.sleep(400);
                     neep.setPosition(1);
                     Thread.sleep(200);
                     setMec(0);
@@ -239,7 +238,7 @@ public class AUTO_Sample extends OpMode {
                     follower.setMaxPower(0.8);
                     Servo_kan(0);
                     wrist.setPosition(1);
-                    Thread.sleep(500);
+                    Thread.sleep(650);
                     neep.setPosition(1);
                     Thread.sleep(200);
                     setMec(0);
@@ -343,7 +342,7 @@ public class AUTO_Sample extends OpMode {
                 break;
             case 202:
                 if (!follower.isBusy()) {
-                    Thread.sleep(150);
+                    Thread.sleep(280);
                     neep.setPosition(0);
                     Thread.sleep(300);
                     Servo_kan(0);
@@ -364,7 +363,7 @@ public class AUTO_Sample extends OpMode {
     public void mecpath() {
         switch (mec) {
             case 0:
-                upliftset(1520);
+                upliftset(1600);
                 break;
             case 1:
                 downlift(15);
